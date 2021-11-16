@@ -108,7 +108,13 @@ const googleSignin = async(req, res) => {
 
 }
 
+const helth_check= (req , res) =>{
+    return res.status(200).json({
+        msg: "Running"
+    })
+}
 module.exports = {
     login,
-    googleSignin
+    googleSignin,
+    helth_check
 }
