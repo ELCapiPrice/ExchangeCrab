@@ -2,7 +2,7 @@ export const navbar = `
 <nav class="navbar navbar-expand-lg navbar-light bg-navbar ps-4">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">
-      <img src="/img/crab-logo.png" alt="crab-logo" width="73px" height="40px" class="d-inline-block align-text-top">
+      <img src="img/crab-logo.png" alt="crab-logo" width="73px" height="40px" class="d-inline-block align-text-top">
       <span class="title-text">Exchange Crabs</span>
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
