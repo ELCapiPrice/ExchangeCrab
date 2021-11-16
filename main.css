@@ -1,0 +1,280 @@
+
+
+.title-text {
+  font-family: Kalam, sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  text-decoration: underline;
+  color: rgb(214, 48, 49);
+  line-height: 1.4;
+  border-radius: 0;
+}
+
+
+.bg-navbar {
+  background: -webkit-linear-gradient(top, rgb(255, 181, 163) 0%, rgb(194, 249, 255) 100%);
+  border-radius: 0;
+  transition: background 500ms;
+}
+
+body, html {
+  height: 100vh;
+  margin: 0;
+}
+
+.bg-main {
+  background: url("./img/background.jpg") center top / cover no-repeat rgb(187, 209, 233);
+  min-height: 100%;
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.bg-card-1 {
+  background: radial-gradient(circle closest-side at 50% 50%, rgb(31, 228, 245) 0%, rgb(63, 186, 254) 100%);
+  border-radius: 20px;
+  box-shadow: rgb(148, 148, 148) 2px 2px 4px 0;
+}
+
+.bg-card-2 {
+  background: radial-gradient(circle closest-side at 50% 50%, rgb(118, 178, 254) 0%, rgb(182, 158, 254) 100%);
+  border-radius: 20px;
+  box-shadow: rgb(148, 148, 148) 2px 2px 4px 0;
+}
+
+.bg-card-3 {
+  background: radial-gradient(circle closest-side at 50% 50%, rgb(251, 193, 204) 0%, rgb(250, 153, 178) 100%);
+  border-radius: 20px;
+  box-shadow: rgb(148, 148, 148) 2px 2px 4px 0;
+}
+
+.bg-card-4 {
+  background: radial-gradient(circle closest-side at 50% 50%, rgb(251, 193, 204) 0%, rgb(250, 153, 178) 100%);
+  border-radius: 20px;
+  box-shadow: rgb(148, 148, 148) 2px 2px 4px 0;
+}
+
+.bg-card-5 {
+  background: radial-gradient(circle closest-side at 50% 50%, rgb(245, 136, 216) 0%, rgb(192, 163, 229) 100%);
+  border-radius: 20px;
+  box-shadow: rgb(148, 148, 148) 2px 2px 4px 0;
+}
+
+.title-center {
+  text-align: center;
+  color: rgb(255, 255, 255);
+}
+
+
+.card-title {
+  white-space: pre-wrap;
+  overflow: visible;
+  font-family: Oswald, sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+  color: rgb(255, 255, 255);
+  text-align: center;
+  line-height: 1;
+  border-radius: 0;
+}
+
+.input-group-text {
+  border: 1px dashed rgb(189, 189, 189);
+  box-shadow: rgb(170, 170, 170) 2px 2px 4px 0;
+  font-family: "Abhaya Libre", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: rgb(85, 85, 85);
+  transition: border-color 200ms ease 0s, box-shadow 200ms ease 0s;
+  text-align: start;
+}
+
+.input-group-text:focus {
+  border: rgb(0, 0, 255);
+  box-shadow: rgb(0, 0, 255);
+}
+
+.input-text {
+  white-space: pre-wrap;
+  font-family: Acme, sans-serif;
+  font-size: 18px;
+  color: rgb(255, 255, 255);
+  line-height: 1.4;
+  border-radius: 0;
+}
+
+.button {
+  cursor: pointer;
+  text-align: center;
+  font-family: Oswald, sans-serif;
+  font-size: 18px;
+  color: rgb(255, 255, 255);
+  line-height: 1;
+  border-radius: 5px;
+  box-shadow: rgb(117, 117, 117) 2px 2px 4px 0;
+  transition: backgorund 200ms ease 0s;
+}
+
+.button-green {
+  background: radial-gradient(closest-corner at 50% 50%, rgb(92, 209, 84) 0%, rgb(69, 204, 45), rgb(26, 173, 0) 100%);
+  border: 1px solid rgb(49, 163, 0);
+}
+
+.button-green:active {
+  background: radial-gradient(closest-corner at 50% 50%, rgb(139, 248, 131) 0%, rgb(90, 246, 63), rgb(30, 211, 0) 100%);
+}
+
+.center-button{
+  text-align: center;
+}
+
+.rectangle {
+  background-color: rgb(255, 255, 255);
+  border-style: solid;
+  border-width: 1px;
+  border-color: rgb(220, 235, 247);
+  border-radius: 5px;
+}
+
+.rectangle-text {
+  white-space: pre-wrap;
+  word-break: break-word;
+  text-overflow: ellipsis;
+  font-family: Acme, sans-serif;
+  font-size: 16px;
+  color: rgb(51, 51, 51);
+  line-height: 1.4;
+  margin-bottom: 0;
+}
+
+.info {
+  text-align: center;
+  background: none;
+  border: none;
+  color: rgb(0, 204, 255);
+  font-size: 25px;
+  border-radius: 4px;
+}
+
+.leave {
+  text-align: center;
+  background: none;
+  border: none;
+  color: rgb(255, 0, 0);
+  font-size: 25px;
+  border-radius: 4px;
+}
+
+.button-info {
+  cursor: pointer;
+  background: none rgb(217, 255, 233);
+  border: none;
+  text-align: center;
+  font-family: Lato, sans-serif;
+  font-size: 14px;
+  color: rgb(255, 255, 255);
+  line-height: 1;
+  border-radius: 3px;
+  transition: backgorund 200ms ease 0s;
+}
+
+.icon-medium {
+  font-size: 1.5rem;
+}
+
+.dontShow {
+  display: none;
+}
+
+.bg-gray {
+  background-color: rgb(224, 230, 233);
+  border-radius: 5px;
+}
+
+.button-carmin {
+  cursor: pointer;
+  background: -webkit-linear-gradient(top, rgb(247, 173, 143) 0%, rgb(214, 100, 77) 100%);
+  border: 1px none rgb(127, 149, 235);
+  text-align: center;
+  font-family: Krub, sans-serif;
+  font-size: 16px;
+  color: rgb(255, 255, 255);
+  line-height: 1;
+  border-radius: 5px;
+  transition: background 200ms ease 0s;
+}
+
+.input-login {
+  border: 2px solid rgb(255, 255, 255);
+  background-color: rgb(255, 255, 255);
+  border-radius: 5px;
+  font-family: Krub, sans-serif;
+  font-size: 16px;
+  color: rgb(99, 110, 114);
+  padding: 5px 15px;
+  transition: border-color 200ms ease-in-out 0s;
+  box-shadow: none;
+}
+
+.space {
+  margin-top: 75px;
+  margin-bottom: 75px;
+}
+
+.title-login {
+  white-space: pre-wrap;
+  overflow: visible;
+  font-family: Georgia, sans-serif;
+  font-size: xxx-large;
+  color: rgb(128, 0, 0);
+  line-height: 1.4;
+  border-radius: 0;
+  font-weight: normal;
+  text-decoration: underline;
+  font-style: normal;
+  text-align: center;
+  -webkit-font-smoothing: antialiased;
+  overflow-wrap: break-word;
+}
+
+.bg-carmin {
+  font-family: "Merriweather Sans", sans-serif;
+  font-size: 24px;
+  color: rgb(255, 255, 255);
+  word-spacing: 1px;
+  line-height: 1.5;
+  border-radius: 5px;
+  background: -webkit-linear-gradient(top, rgb(247, 173, 143) 0%, rgb(214, 100, 77) 100%);
+}
+
+.title-guinda {
+  font-family: "Open Sans", sans-serif;
+  font-size: x-large;
+  font-weight: bold;
+  color: rgb(128, 0, 0);
+  line-height: 1;
+  text-decoration: underline;
+}
+
+.table-carmin {
+  --bs-table-bg: -webkit-linear-gradient(top, rgb(250, 165, 165) 0%, rgb(247, 121, 3) 100%);
+  --bs-table-striped-bg: #c5d7f2;
+  --bs-table-striped-color: #bacbe6;
+  --bs-table-active-bg: #bacbe6;
+  --bs-table-active-color: #000;
+  --bs-table-hover-bg: #bfd1ec;
+  --bs-table-hover-color: #000;
+  color: #000;
+  border-color: #bacbe6;
+  background: -webkit-linear-gradient(top, rgb(250, 165, 165) 0%, rgb(247, 121, 3) 100%);
+}
+
+.button-blue {
+  background-color: rgb(105, 210, 255);
+}
+
+.button-red {
+  background-color: rgb(255, 0, 0)
+}
