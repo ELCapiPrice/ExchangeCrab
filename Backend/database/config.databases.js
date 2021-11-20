@@ -2,8 +2,12 @@ const Sequelize = require("sequelize");
 const colors = require('colors');
 require('dotenv').config({ path: '../dev.env' })
 
+
 let sequelize;
 try {
+
+   
+
     sequelize = new Sequelize('exchange', 'admin', 'hola12345', {
         //host: process.env.HOST,
         host: 'exchange.cb3wuyiqo7gd.us-east-2.rds.amazonaws.com',
