@@ -2,7 +2,7 @@ const express = require('express')
 
 let auth = require('../routes/auth')
 let cors = require('cors')
-const { dbConnection } = require('../database/config.databases')
+const sequelize = require('../database/config.databases')
 
 class Server {
 
@@ -12,7 +12,7 @@ class Server {
         this.authPath = '/api'
 
         //Conecta a base de datos
-       // this.conectarDB();
+          this.connectDB();
 
         //Middlewares
         this.middlewares();
@@ -27,6 +27,31 @@ class Server {
         //aqui solo hacemos una conexion
         await dbConnection();
     }
+
+    async connectDB() {
+        try {
+            await sequelize.authenticate();
+            console.log('Conexion con la base de datos establecida'.green);
+
+            /*
+            await Promise.all([User.sync(), Comment.sync(), Friendship.sync(), Chat.sync()]).then(() => {
+                User.hasMany(Comment, { as: 'Comments', foreignKey: 'id_comment' });
+                Comment.belongsTo(User, { foreignKey: 'id_user' });
+                User.hasMany(Friendship, { foreignKey: 'id_friendship' });
+                Friendship.belongsTo(User, { foreignKey: 'id_user' });
+                //User.belongsTo(Friendship, { foreignKey: 'id_friendship' });
+            
+            }).catch(err => {
+                console.log(err);
+            })
+            */
+           // console.log("Todos los modelos fueron sincronizados correctamente".green);
+        } catch (error) {
+            console.error('Problema al conectrase o al sicronizar modelos'.red, error);
+        }
+
+    }
+
 
     middlewares() {
 
