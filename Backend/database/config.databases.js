@@ -1,4 +1,5 @@
 const Sequelize = require("sequelize");
+const colors = require('colors');
 require('dotenv').config({ path: '../dev.env' })
 
 let sequelize;
