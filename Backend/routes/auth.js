@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
-const { login, googleSignin ,  helth_check} = require('../controllers/auth')
+const { login, helth_check , create_user} = require('../controllers/auth')
     //custom middleware que obtiene los errores
 const { validarCampos } = require('../middlewares/validar_campos')
 const router = new Router();
@@ -14,12 +14,7 @@ router.post('/login', [
     validarCampos
 ], login)
 
-router.post('/google', [
-    check('id_token', 'El id_token es necesario').not().isEmpty(),
-    validarCampos
-], googleSignin)
-
-
+router.post('/create-user' , create_user);
 
 
 

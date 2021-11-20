@@ -1,8 +1,9 @@
 const express = require('express')
 
-let auth = require('../routes/auth')
+let auth = require('./routes/auth')
 let cors = require('cors')
-const sequelize = require('../database/config.databases')
+const sequelize = require('./database/config.databases')
+const {User} = require('./models/User')
 
 class Server {
 
@@ -33,6 +34,11 @@ class Server {
             await sequelize.authenticate();
             console.log('Conexion con la base de datos establecida'.green);
 
+            await Promise.all([User.sync()]).then(()=> {
+                console.log("Modelos Creados");
+            }).catch(err=>{
+                console.log("ERROR: " , err);
+            })
             /*
             await Promise.all([User.sync(), Comment.sync(), Friendship.sync(), Chat.sync()]).then(() => {
                 User.hasMany(Comment, { as: 'Comments', foreignKey: 'id_comment' });

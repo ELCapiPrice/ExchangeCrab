@@ -1,8 +1,8 @@
 const { response } = require('express');
-const Usuario = require('../models/usuario')
+const {User} = require('../models/User')
 const bcrypt = require('bcryptjs');
-const { generarJWT } = require('../helpers/generarJWT');
-const { googleVerify } = require('../helpers/google-verify');
+const { v4: uuidv4 } = require('uuid');
+
 
 
 const login = async(req, res = response) => {
@@ -59,54 +59,31 @@ const login = async(req, res = response) => {
 }
 
 
+const create_user = async (req , res)=>{
+    const {first_name , last_name , user_name, email , password }= req.body;
+    let message = {messaje:"UPS! Problmas al crear usuario"}
 
-const googleSignin = async(req, res) => {
+    try{
+        const user = await User.create ({
 
-    const { id_token } = req.body;
-    try {
-        const { correo, nombre, img } = await googleVerify(id_token)
-
-        let usuario = await Usuario.findOne({ correo });
-
-        if (!usuario) {
-
-            //Tengo que crearlo
-            const data = {
-                nombre,
-                correo,
-                password: ':D',
-                img,
-                google: true,
-            }
-            usuario = new Usuario(data);
-            await usuario.save();
-        }
-
-        //Si el usuario de DB
-
-        if (!usuario.estado) {
-            return res.status(401).json({
-                msg: 'Hable con el adminsitrador , usuario bloqueado'
-            })
-        }
-
-        //Gnerar el JWT
-        const token = await generarJWT(usuario.id);
-
-        res.json({
-            usuario,
-            token
+            id_unique: uuidv4(),
+            user_name,
+            first_name,
+            last_name,
+            password,
+            email,
         })
 
+        res.status(201).json({message:"Usuario Creado"})
 
 
-    } catch (error) {
-        res.status(400).json({
-            msg: 'Token de Google no es valdio'
-        })
+    }catch(e){
+        res.status(400).json(message);
+        console.log(e)
     }
 
 }
+
 
 const helth_check= (req , res) =>{
     return res.status(200).json({
@@ -115,6 +92,6 @@ const helth_check= (req , res) =>{
 }
 module.exports = {
     login,
-    googleSignin,
-    helth_check
+    helth_check,
+    create_user
 }
