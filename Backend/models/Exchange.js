@@ -34,7 +34,7 @@ const Exchange = sequelize.define("exchange", {
     type: Sequelize.INTEGER,
     allowNull: false,
     references: {
-      model: 'user',
+      model: 'users',
       key: 'id_user'
     }
   },
@@ -45,7 +45,7 @@ const Exchange = sequelize.define("exchange", {
 });
 
 
-module.export = {
+module.exports = {
   Exchange
 }
 
