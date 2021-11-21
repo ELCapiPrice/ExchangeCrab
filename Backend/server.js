@@ -4,6 +4,9 @@ let auth = require('./routes/auth')
 let cors = require('cors')
 const sequelize = require('./database/config.databases')
 const {User} = require('./models/User')
+const { Exchange } = require('./models/Exchange')
+const { Topic } = require('./models/Topic')
+const { Participant } = require('./models/Participant')
 
 class Server {
 
@@ -34,11 +37,12 @@ class Server {
             await sequelize.authenticate();
             console.log('Conexion con la base de datos establecida'.green);
 
-            await Promise.all([User.sync()]).then(()=> {
+            await Promise.all([User.sync(), Exchange.sync(), Topic.sync(), Participant.sync()]).then(()=> {
                 console.log("Modelos Creados");
             }).catch(err=>{
                 console.log("ERROR: " , err);
             })
+            
             /*
             await Promise.all([User.sync(), Comment.sync(), Friendship.sync(), Chat.sync()]).then(() => {
                 User.hasMany(Comment, { as: 'Comments', foreignKey: 'id_comment' });
@@ -46,7 +50,7 @@ class Server {
                 User.hasMany(Friendship, { foreignKey: 'id_friendship' });
                 Friendship.belongsTo(User, { foreignKey: 'id_user' });
                 //User.belongsTo(Friendship, { foreignKey: 'id_friendship' });
-            
+
             }).catch(err => {
                 console.log(err);
             })
@@ -78,7 +82,7 @@ class Server {
 
         //otro tipo de middl configuramos el router
         this.app.use(this.authPath, auth)
-        
+
 
 
     }
