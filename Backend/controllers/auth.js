@@ -2,6 +2,13 @@ const { response } = require('express');
 const {User} = require('../models/User')
 const bcrypt = require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
+const  path = require('path');
+
+
+
+const login_render =(req , res)=>{
+    res.sendFile(path.join(__dirname, '../../frontend/auth.html'));
+}
 
 
 
@@ -39,6 +46,10 @@ const login = async(req, res = response) => {
             })
         }
 
+        delete usuario
+        delete password
+        delete email
+
 
         //Generar el JWT
         //const token = await generarJWT(usuario.id);
@@ -56,6 +67,10 @@ const login = async(req, res = response) => {
     }
 
 }
+
+
+
+
 
 
 const create_user = async (req , res)=>{
@@ -110,5 +125,6 @@ const helth_check= (req , res) =>{
 module.exports = {
     login,
     helth_check,
-    create_user
+    create_user,
+    login_render
 }
