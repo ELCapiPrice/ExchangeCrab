@@ -1,7 +1,7 @@
 const { validationResult } = require('express-validator');
 
 
-//como es un middlware usa un parametro mas 
+//como es un middlware usa un parametro mas
 const validarCampos = (req, res, next) => {
     //obstenmmos los errores del middlware de la ruta
     const errors = validationResult(req);
