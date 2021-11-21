@@ -3,13 +3,29 @@ const router = express.Router();
 const { check } = require('express-validator');
 const { validarCampos } = require('../middlewares/validar_campos')
 
-const { getExchangeByKey, createNewExchange, getExchangesByUserId, inviteParticipantByEmail } = require('../controllers/exchange');
+const { getExchangeByKey,
+  createNewExchange,
+  getExchangesByUserId,
+  inviteParticipantByEmail,
+  deleteExchangeById,
+  joinExchangeByKey,
+  changeStatusOfParticipation,
+  deleteUserFromExchange} = require('../controllers/exchange');
 
 
 router.get('/exchange/key/:key', getExchangeByKey);
 router.get('/exchange/user/:id', getExchangesByUserId);
 
 router.post('/exchange/invite', inviteParticipantByEmail);
+
+router.post('/exchange/status', changeStatusOfParticipation);
+
+router.post('/exchange/join', joinExchangeByKey);
+
+router.delete('/exchange/delete', deleteExchangeById);
+
+
+router.delete('/exchange/user/delete', deleteUserFromExchange);
 
 router.post('/exchange',
   check('key', 'La clave del intercambio es obligatoria.').not().isEmpty(),

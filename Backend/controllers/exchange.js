@@ -65,20 +65,23 @@ const getExchangeByKey = async (req, res) => {
   try {
     const exchange = await Exchange.findOne({
       where: {
-        key
+        key,
+        active: true
       }
     });
     if(exchange === null) return res.status(401).json({ error: "No existe un intercambio con esa clave"});
     /* Obtenemos los participantes del intercambio */
     const participants = await Participant.findAll({
       where: {
-        id_exchange: exchange.id_exchange
+        id_exchange: exchange.id_exchange,
+        active: true
       }
     });
     /* Obtenemos los temas del intercambio */
     const topics = await Topic.findAll({
       where: {
-        id_exchange: exchange.id_exchange
+        id_exchange: exchange.id_exchange,
+        active: true
       }
     });
     const data = {
@@ -99,13 +102,15 @@ const getExchangesByUserId = async (req, res) => {
   try {
     const exchange = await Exchange.findAll({
       where: {
-        owner: id
+        owner: id,
+        active: true
       }
     });
 
     const participants = await Participant.findAll({
       where: {
-        id_user: id
+        id_user: id,
+        active: true
       }
     });
 
@@ -124,11 +129,14 @@ const getExchangesByUserId = async (req, res) => {
 const inviteParticipantByEmail = async (req, res) => {
   const { email, exchangeId } = req.body;
 
+  /* TODO Revisar si el usuario ya fue invitado */
+
   try {
     /* Buscamos al usuario por su correo */
     const user = await User.findOne({
       where: {
-        email
+        email,
+        active: true
       }
     });
     if(user === null) return res.status(400).json({error: "El usuario no se encuentra registrado"});
@@ -141,11 +149,126 @@ const inviteParticipantByEmail = async (req, res) => {
     /* TODO Enviar mensaje por correo electronico de que recibio una nueva invitacion */
 
 
-    return res.status(200).json({ msg: "Se invito al usuario a participar "});
+    return res.status(200).json({ msg: "Se invito al usuario a participar."});
   } catch (e) {
     console.log(e);
     return res.status(400).json({error: "Error al invitar al usuario"});
   }
+}
+
+const deleteExchangeById = async (req, res) => {
+  const idExchange = req.body.idExchange;
+
+  try {
+    /* Borramos logicamente el intercambio */
+    const exchange = await Exchange.update({
+      active: false
+    }, {
+      where: {
+        id_exchange: idExchange
+      }
+    });
+    /* Borramos logicamente los participantes del intercambio */
+    const participant = await Participant.update({
+      active: false
+    }, {
+      where: {
+        id_exchange: idExchange
+      }
+    });
+    /* Borramos logicamente los temas del intercambio */
+    const topic = await Topic.update({
+      active: false
+    }, {
+      where: {
+        id_exchange: idExchange
+      }
+    });
+    return res.status(200).json({ msg: "Se borro el intercambio correctamente."});
+  } catch (e) {
+    console.log(e);
+    return res.status(400).json({error: "Error al borrar el intercambio"});
+  }
+}
+
+const joinExchangeByKey = async (req, res) => {
+  const { key, topic, idUser } = req.body;
+
+  try {
+    /* Obtenemos la informacion del intercambio */
+    const exchange = await Exchange.findOne({
+      where: {
+        key,
+        active: true
+      }
+    });
+    if(!exchange) return res.status(400).json({error: "Error, el código de intercambio no existe!"});
+
+    /* Unimos al usuario al intercambio */
+    const participant = await Participant.create({
+      topic,
+      id_exchange: exchange.id_exchange,
+      id_user: idUser,
+      status: 1
+    });
+
+    return res.status(200).json({ msg: "Te has unido exitosamente al intercambio."});
+  } catch (e) {
+    console.log(e);
+    return res.status(400).json({error: "Error al unirse al intercambio"});
+  }
+
+}
+
+const changeStatusOfParticipation = async (req, res) => {
+  const { idExchange, accept, idUser } = req.body;
+
+  try {
+
+    /* Modificamos el estado del participante */
+    const participant = await Participant.update({
+      status: accept
+    }, {
+      where: {
+        id_user: idUser,
+        id_exchange: idExchange
+      }
+    });
+
+    return res.status(200).json({ msg: "Se cambio el estado de la invitación."});
+  } catch (e) {
+    console.log(e);
+    return res.status(400).json({error: "Error al aceptar/rechazar la invitación"});
+  }
+
+
+}
+
+const deleteUserFromExchange = async (req, res) => {
+  const { idUser, idExchange } = req.body;
+
+  try {
+    /* Buscar a participante y desactivar su campo active */
+    const participant = await Participant.update({
+      active: false
+    }, {
+      where: {
+        id_exchange: idExchange,
+        id_user: idUser
+      }
+    });
+
+    return res.status(200).json({ msg: "Se removio al usuario del intercambio."});
+  } catch (e) {
+    console.log(e);
+    return res.status(400).json({error: "Error al borrar al usaurio del intercambio."});
+  }
+}
+
+const editExchangeById = async (req, res) => {
+  //TODO Esta historia continuara...
+
+  //TODO Tus intercambios agregar otro boton de info
 }
 
 
@@ -153,14 +276,9 @@ module.exports = {
   getExchangeByKey,
   createNewExchange,
   getExchangesByUserId,
-  inviteParticipantByEmail
+  inviteParticipantByEmail,
+  deleteExchangeById,
+  joinExchangeByKey,
+  changeStatusOfParticipation,
+  deleteUserFromExchange
 }
-
-
-
-
-/*
-const getAllExchanges = function () {
-
-}
- */

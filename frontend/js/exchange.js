@@ -34,6 +34,7 @@ async function createExchange(event) {
     let comments = document.getElementById('inputComments').value;
     const ownerParticipate = document.getElementById('inputOwnerParticipate').checked;
     console.log(document.getElementById('inputOwnerParticipate'));
+    /* TODO Cambiar este número por el id del usuario real. (Hasta que se implemente el sistema de logeo) */
     const owner = 2;
     if(!key || !topics || !maxValue || !limitDate || !date || !ownerParticipate || !owner) return alert('Error al leer los datos de los inputs');
     if(!comments) {
@@ -61,7 +62,7 @@ async function createExchange(event) {
         data = await data.json();
 
         console.log(data);
-        alert(`Se envio`);
+        alert(`${data}`);
 
     } catch (e) {
         console.log(e);
