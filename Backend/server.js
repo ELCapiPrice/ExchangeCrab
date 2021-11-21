@@ -1,6 +1,7 @@
 const express = require('express')
 
 let auth = require('./routes/auth')
+let exchange = require('./routes/exchange')
 let cors = require('cors')
 const sequelize = require('./database/config.databases')
 const {User} = require('./models/User')
@@ -85,6 +86,7 @@ class Server {
 
         //otro tipo de middl configuramos el router
         this.app.use(this.authPath, auth)
+        this.app.use(this.authPath, exchange)
 
 
 
