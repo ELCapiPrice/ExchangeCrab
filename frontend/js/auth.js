@@ -1,5 +1,52 @@
 class Login {
 
+    constructor (emaill  , password){
+        this.email=emaill;
+        this.password= password;
+    }
+
+    async login_user (){
+        console.log(this.email , this.password);
+        await fetch(`http://localhost:7777/api/login`, {
+            method: 'POST',
+            body: new URLSearchParams({
+                'email': this.email,
+                'password': this.password,
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.msg=='OK'){
+                this.createAltert("Iniciando Sesion.....","success")
+                console.log("object");
+            }else{
+                this.createAltert("Usuario / Password erroneos","error")
+            }
+        })
+        .catch(err => console.log(err));
+    }
+
+    createAltert(message , type){
+        const  div_root = document.querySelector('#alerta');
+        const alerta = document.createElement('div');
+        
+        if (type=="error"){
+            alerta.classList.add('alert', 'alert-danger')
+            alerta.setAttribute('roler', 'alert');
+            alerta.textContent=message;
+        }else{
+            alerta.classList.add('alert', 'alert-success')
+            alerta.setAttribute('roler', 'alert');
+            alerta.textContent=message;
+        }
+        
+    
+        div_root.appendChild(alerta);
+        setTimeout(() => {
+            alerta.remove();
+        }, 2500);
+    }
+
 }
 
 class register {
@@ -28,10 +75,10 @@ window.onload = async function(){
     btn_submit_login.addEventListener('click' , function(e){
         e.preventDefault();
         if (validatedatalogin()){
-        console.log(email.value);
-        console.log(password.value);
+            const login = new Login(email.value , password.value);
+            login.login_user();
         }else{
-            console.log("Upps");
+            generaralert();
             return
         }
     
@@ -48,6 +95,20 @@ window.onload = async function(){
     }
 
     function validatedataregister(){
+
+    }
+
+    function generaralert (){
+        const  div_root = document.querySelector('#alerta');
+        const alerta = document.createElement('div');
+        alerta.classList.add('alert', 'alert-danger')
+        alerta.setAttribute('roler', 'alert');
+        alerta.textContent="Hay un problema. Verifique los campos";
+        div_root.appendChild(alerta);
+
+        setTimeout(() => {
+            alerta.remove();
+        }, 2500);
 
     }
 

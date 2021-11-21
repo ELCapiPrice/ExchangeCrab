@@ -22,7 +22,7 @@ const login = async(req, res = response) => {
 
         if (!usuario) {
             return res.status(400).json({
-                msg: "Usuario / Password no son corretos - user not foud"
+                msg: "Usuario / Password no son corretos"
             })
         }
 
@@ -31,7 +31,7 @@ const login = async(req, res = response) => {
         if (!usuario.is_active) {
 
             return res.status(400).json({
-                msg: 'Su cuenta esta suspendida, contacte al admnistrador- user deleted'
+                msg: 'Su cuenta esta suspendida, contacte al admnistrador'
             })
         }
 
@@ -41,7 +41,7 @@ const login = async(req, res = response) => {
 
         if (!validaPasword) {
             return res.status(400).json({
-                msg: 'Usuario / password no son correctos - password wrong'
+                msg: 'Usuario / password no son correctos'
             })
         }
 
@@ -55,7 +55,7 @@ const login = async(req, res = response) => {
 
 
        return  res.status(200).json({
-            message : "Incio de sesion exitoso"
+            msg : "OK"
         })
 
     } catch (error) {
