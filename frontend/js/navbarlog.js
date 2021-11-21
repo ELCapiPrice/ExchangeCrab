@@ -1,4 +1,4 @@
-export const navbar = `
+export const navbarlog = `
 <nav class="navbar navbar-expand-lg navbar-light bg-navbar ps-4">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">
@@ -12,7 +12,7 @@ export const navbar = `
       <div class="navbar-nav">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link active title-text" aria-current="page" href="inicio.html">Inicio</a>
+            <a class="nav-link dontShow title-text" aria-current="page" href="inicio.html">Inicio</a>
           </li>
           <li class="nav-item">
             <a class="nav-link dontShow" href="auth.html">Registrarse</a>
@@ -21,10 +21,10 @@ export const navbar = `
             <a class="nav-link dontShow" href="auth.html">Iniciar Sesión</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active title-text" href="description.html">Crear intercambio</a>
+            <a class="nav-link dontShow title-text" href="description.html">Crear intercambio</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active title-text" href="auth.html">Cerrar Sesión</a>
+            <a class="nav-link dontShow title-text" href="auth.html">Cerrar Sesión</a>
           </li>
         </ul>
       </div>
