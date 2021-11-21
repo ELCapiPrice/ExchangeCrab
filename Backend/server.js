@@ -42,7 +42,7 @@ class Server {
             }).catch(err=>{
                 console.log("ERROR: " , err);
             })
-            
+
             /*
             await Promise.all([User.sync(), Comment.sync(), Friendship.sync(), Chat.sync()]).then(() => {
                 User.hasMany(Comment, { as: 'Comments', foreignKey: 'id_comment' });
