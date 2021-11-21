@@ -23,7 +23,7 @@ body, html {
 }
 
 .bg-main {
-  background: url("./img/background.jpg") center top / cover no-repeat rgb(187, 209, 233);
+  background: url("../img/background.jpg") center top / cover no-repeat rgb(187, 209, 233);
   min-height: 100%;
   width: 100%;
   margin-right: auto;
