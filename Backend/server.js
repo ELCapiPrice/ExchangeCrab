@@ -69,11 +69,11 @@ class Server {
         //CORS
         this.app.use(cors());
 
-        //json
+        //json //Lectaura y parseo del body
         this.app.use(express.json());
 
-        //Lectaura y parseo del body
-        this.app.use(express.json());
+        
+        this.app.use(express.urlencoded({ extended: true }));
 
         //Directorio Publico
         this.app.use(express.static('public'));
