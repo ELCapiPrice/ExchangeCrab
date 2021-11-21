@@ -17,7 +17,7 @@ const Topic = sequelize.define("topic", {
     type: Sequelize.INTEGER,
     allowNull: false,
     references: {
-      model: 'exchange',
+      model: 'exchanges',
       key: 'id_exchange'
     }
   },
@@ -28,6 +28,6 @@ const Topic = sequelize.define("topic", {
 });
 
 
-module.export = {
+module.exports = {
   Topic
 }

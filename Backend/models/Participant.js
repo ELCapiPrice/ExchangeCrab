@@ -11,7 +11,7 @@ const Participant = sequelize.define("participant", {
     type: Sequelize.INTEGER,
     allowNull: true,
     references: {
-      model: 'topic',
+      model: 'topics',
       key: 'id_topic'
     }
   },
@@ -19,7 +19,7 @@ const Participant = sequelize.define("participant", {
     type: Sequelize.INTEGER,
     allowNull: false,
     references: {
-      model: 'exchange',
+      model: 'exchanges',
       key: 'id_exchange'
     }
   },
@@ -27,7 +27,7 @@ const Participant = sequelize.define("participant", {
     type: Sequelize.INTEGER,
     allowNull: false,
     references: {
-      model: 'user',
+      model: 'users',
       key: 'id_user'
     }
   },
@@ -39,7 +39,7 @@ const Participant = sequelize.define("participant", {
     type: Sequelize.INTEGER,
     allowNull: true,
     references: {
-      model: 'user',
+      model: 'users',
       key: 'id_user'
     }
   },
@@ -49,6 +49,6 @@ const Participant = sequelize.define("participant", {
   }
 });
 
-module.export = {
+module.exports = {
   Participant
 }
