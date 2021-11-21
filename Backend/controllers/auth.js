@@ -5,7 +5,6 @@ const { v4: uuidv4 } = require('uuid');
 const  path = require('path');
 
 
-
 const login_render =(req , res)=>{
     res.sendFile(path.join(__dirname, '../../frontend/auth.html'));
 }
