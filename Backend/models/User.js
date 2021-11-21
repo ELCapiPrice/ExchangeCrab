@@ -13,15 +13,15 @@ const User = sequelize.define("user", {
         type: Sequelize.STRING,
         allowNull: false
     },
-    user_name: {
+    username: {
         type: Sequelize.STRING,
         allowNull: false
     },
-    first_name: {
+    firstname: {
         type: Sequelize.STRING,
         allowNull: false
     },
-    last_name: {
+    lastname: {
         type: Sequelize.STRING,
         allowNull: false
     },
@@ -32,10 +32,6 @@ const User = sequelize.define("user", {
     password: {
         type: Sequelize.STRING,
         allowNull: false
-    },
-    hobbie: {
-        type: Sequelize.STRING,
-        allowNull: true
     },
     list_exchange_room: {
         type: Sequelize.INTEGER,

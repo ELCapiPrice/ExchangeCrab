@@ -3,6 +3,7 @@ const {User} = require('../models/User')
 const bcrypt = require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
 const  path = require('path');
+const {generarJWT} = require('../helpers/generarJWT')
 
 
 const login_render =(req , res)=>{
@@ -52,9 +53,8 @@ const login = async(req, res = response) => {
 
         //Generar el JWT
         //const token = await generarJWT(usuario.id);
-
-
-       return  res.status(200).json({
+       const token = await generarJWT(usuario.dataValues.id_unique, usuario.dataValues.email);
+       return  res.cookie("token",token).status(202).json({
             msg : "OK"
         })
 
@@ -73,7 +73,16 @@ const login = async(req, res = response) => {
 
 
 const create_user = async (req , res)=>{
-    const {first_name , last_name , user_name, email , password }= req.body;
+
+    /* 
+         this.email=email;
+        this.username=username;
+        this.name=name;
+        this.lastname=lastname;
+        this.password=password;
+    */
+
+    const {email , username , firstname , lastname , password}= req.body;
     //Message by default
     let message = {messaje:"UPS! Problmas al crear usuario"}
 
@@ -89,21 +98,21 @@ const create_user = async (req , res)=>{
 
         const user = await User.create ({
             id_unique: uuidv4(),
-            user_name,
-            first_name,
-            last_name,
-            password:password_cifrada,
             email,
+            firstname,
+            username,
+            lastname,
+            password:password_cifrada,
         })
 
         delete user;
         delete password_cifrada;
 
-        return res.status(201).json({message:"Usuario Creado"});
+        return res.status(201).json({message:"OK"});
         
         }else {
 
-        return res.status(400).json({message:"El usuario ya tiene cuenta ligada a ese email"});
+        return res.status(400).json({message:"Usuario ya registrado"});
 
         }
          
