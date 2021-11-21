@@ -8,12 +8,12 @@ const Participant = sequelize.define("participant", {
     autoIncrement: true
   },
   topic: { //Tema que escogio el participante
-    type: Sequelize.INTEGER,
+    type: Sequelize.STRING,
     allowNull: true,
-    references: {
+    /*references: {
       model: 'topics',
       key: 'id_topic'
-    }
+    }*/
   },
   id_exchange: { //ID del intercambio al que pertenece el participante
     type: Sequelize.INTEGER,

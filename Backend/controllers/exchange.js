@@ -4,17 +4,18 @@
 const { Exchange } = require('../models/exchange');
 const { Topic } = require('../models/topic');
 const { Participant } = require('../models/participant');
+const { User } = require('../models/user');
 
 const createNewExchange = async (req, res) => {
   let { key, topics, maxValue, limitDate, date, owner, ownerParticipate, comments } = req.body;
-  console.log(key);
+  /*console.log(key);
   console.log(topics);
   console.log(maxValue);
   console.log(limitDate);
   console.log(date);
   console.log(owner);
   console.log(ownerParticipate);
-  console.log(comments);
+  console.log(comments);*/
 
   //Obtenemos una lista de los temas
   topics = topics.replaceAll(' ', '').split(',');
@@ -31,7 +32,6 @@ const createNewExchange = async (req, res) => {
       comments,
       owner
     });
-    console.log(exchange);
     const idExchange = exchange.dataValues.id_exchange;
 
     /* Agregamos los temas que agrego el dueño (Unicamente 3)*/
@@ -52,46 +52,108 @@ const createNewExchange = async (req, res) => {
         status: 1 //Estado aceptado
       });
     }
-
   } catch (e) {
     console.log(e);
+    return res.status(401).json({ error: "Error al crear el intercambio"});
   }
-
-
-  res.status(200).json('Ok');
+  return res.status(200).json({ msg: "Se creo el intercambio correctamente"});
 }
 
+const getExchangeByKey = async (req, res) => {
+  const key = req.params.key;
 
-
-
-
-
-const getAllExchanges = (req, res) => {
-  //const value = obtainAllExchanges(); //Esta funcion estara definida en la DB
-  const data = [
-    {
-      'id': 23,
-      'owner': 'Praxedes',
-      'limitDate': '23/02/20',
-      'tema': 'Dulces'
-    },
-    {
-      'id': 25,
-      'owner': 'Praxedes',
-      'limitDate': '23/02/20',
-      'tema': 'Dulces'
+  try {
+    const exchange = await Exchange.findOne({
+      where: {
+        key
+      }
+    });
+    if(exchange === null) return res.status(401).json({ error: "No existe un intercambio con esa clave"});
+    /* Obtenemos los participantes del intercambio */
+    const participants = await Participant.findAll({
+      where: {
+        id_exchange: exchange.id_exchange
+      }
+    });
+    /* Obtenemos los temas del intercambio */
+    const topics = await Topic.findAll({
+      where: {
+        id_exchange: exchange.id_exchange
+      }
+    });
+    const data = {
+      exchange,
+      participants,
+      topics
     }
-  ];
-
-  res.status(200).json(data);
-
+    return res.status(200).json(data);
+  } catch (e) {
+    console.log(e);
+    return res.status(400).json({error: "Error al obtener los intercambios por su clave"});
+  }
 }
 
+const getExchangesByUserId = async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const exchange = await Exchange.findAll({
+      where: {
+        owner: id
+      }
+    });
+
+    const participants = await Participant.findAll({
+      where: {
+        id_user: id
+      }
+    });
+
+    const data = {
+      exchange,
+      participants
+    }
+
+    return res.status(200).json(data);
+  } catch (e) {
+    console.log(e);
+    return res.status(400).json({error: "Error al obtener los intercambios de el usuario por su ID"});
+  }
+}
+
+const inviteParticipantByEmail = async (req, res) => {
+  const { email, exchangeId } = req.body;
+
+  try {
+    /* Buscamos al usuario por su correo */
+    const user = await User.findOne({
+      where: {
+        email
+      }
+    });
+    if(user === null) return res.status(400).json({error: "El usuario no se encuentra registrado"});
+
+    /* Invitamos al participante a participar */
+    const participant = await Participant.create({
+      id_exchange: exchangeId,
+      id_user: user.id_user,
+    });
+    /* TODO Enviar mensaje por correo electronico de que recibio una nueva invitacion */
+
+
+    return res.status(200).json({ msg: "Se invito al usuario a participar "});
+  } catch (e) {
+    console.log(e);
+    return res.status(400).json({error: "Error al invitar al usuario"});
+  }
+}
 
 
 module.exports = {
-  getAllExchanges,
-  createNewExchange
+  getExchangeByKey,
+  createNewExchange,
+  getExchangesByUserId,
+  inviteParticipantByEmail
 }
 
 
