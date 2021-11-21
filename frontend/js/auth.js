@@ -5,6 +5,7 @@ class Login {
         this.password= password;
     }
 
+
     async login_user (){
         console.log(this.email , this.password);
         await fetch(`http://localhost:7777/api/login`, {
@@ -18,7 +19,8 @@ class Login {
         .then(data => {
             if (data.msg=='OK'){
                 this.createAltert("Iniciando Sesion.....","success")
-                console.log("object");
+                token=this.getCookie();
+                console.log(token);
             }else{
                 this.createAltert("Usuario / Password erroneos","error")
             }
@@ -47,10 +49,81 @@ class Login {
         }, 2500);
     }
 
+
+  
+    getCookie() {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; token=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    parseJWT(token) {
+        let base64Url = token.split('.')[1];
+        let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        let jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        return JSON.parse(jsonPayload);
+    }
+
 }
 
-class register {
+class Register {
 
+    constructor(email  , username ,firstname , lastname , password){
+        this.email=email;
+        this.username=username;
+        this.firstname=firstname;
+        this.lastname=lastname;
+        this.password=password;
+    }
+
+    async  register (){
+        console.log(this.email , this.password);
+        await fetch(`http://localhost:7777/api/create-user`, {
+            method: 'POST',
+            body: new URLSearchParams({
+                'email': this.email,
+                'password': this.password,
+                'username': this.username,
+                'firstname': this.firstname,
+                'lastname':this.lastname,
+                'password':this.password
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            if (data.message=='OK'){
+                this.createAltert("Usuario Creado ","success")
+                console.log("object");
+            }else{
+                this.createAltert("UPPS, Tenemos problemas al registraserse","error")
+            }
+        })
+        .catch(err => console.log(err));
+    }
+
+    createAltert(message , type){
+        const  div_root = document.querySelector('#alerta');
+        const alerta = document.createElement('div');
+        
+        if (type=="error"){
+            alerta.classList.add('alert', 'alert-danger')
+            alerta.setAttribute('roler', 'alert');
+            alerta.textContent=message;
+        }else{
+            alerta.classList.add('alert', 'alert-success')
+            alerta.setAttribute('roler', 'alert');
+            alerta.textContent=message;
+        }
+        
+    
+        div_root.appendChild(alerta);
+        setTimeout(() => {
+            alerta.remove();
+        }, 2500);
+    }
 }
 
 
@@ -69,12 +142,13 @@ window.onload = async function(){
     const username_register = document.querySelector('#registerAlias');
     const name_register = document.querySelector('#registerName');
     const lastname_register= document.querySelector('#registerLastName')
+    const password_register = document.querySelector('#registerPassword');
 
    
    
     btn_submit_login.addEventListener('click' , function(e){
         e.preventDefault();
-        if (validatedatalogin()){
+        if (validatedata("login")){
             const login = new Login(email.value , password.value);
             login.login_user();
         }else{
@@ -86,16 +160,25 @@ window.onload = async function(){
 
     btn_submit_register.addEventListener('click', function(e){
         e.preventDefault();
-        console.log(email_register.value);
+        if (validatedata("register")){
+            console.log(email_register.value);
+            const register= new Register(email_register.value , username_register.value , name_register.value , lastname_register.value , password_register.value);
+            register.register();
+  
+        }else{
+            generaralert();    
+            return
+        }
     })
 
 
-    function validatedatalogin(){
+    function validatedata(type){
+        if (type=="login"){
         return (email.value!=='' && password.value!=='') 
-    }
-
-    function validatedataregister(){
-
+        }
+        else{
+        return (email_register.value!=='' && username_register.value!=='' && name_register.value!=='' && lastname_register.value!=='' && password_register.value!=='' )
+        }
     }
 
     function generaralert (){
