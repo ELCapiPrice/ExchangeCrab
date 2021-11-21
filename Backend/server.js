@@ -7,6 +7,7 @@ const {User} = require('./models/User')
 const { Exchange } = require('./models/Exchange')
 const { Topic } = require('./models/Topic')
 const { Participant } = require('./models/Participant')
+const cookieParser = require('cookie-parser');
 
 class Server {
 
@@ -76,6 +77,8 @@ class Server {
 
         //Directorio Publico
         this.app.use(express.static('public'));
+
+        this.app.use(cookieParser());
     }
 
     routes() {

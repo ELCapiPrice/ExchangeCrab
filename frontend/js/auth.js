@@ -10,6 +10,8 @@ class Login {
         console.log(this.email , this.password);
         await fetch(`http://localhost:7777/api/login`, {
             method: 'POST',
+            credentials: 'include',
+            mode: 'no-cors',
             body: new URLSearchParams({
                 'email': this.email,
                 'password': this.password,
@@ -19,8 +21,7 @@ class Login {
         .then(data => {
             if (data.msg=='OK'){
                 this.createAltert("Iniciando Sesion.....","success")
-                token=this.getCookie();
-                console.log(token);
+                console.log("token");
             }else{
                 this.createAltert("Usuario / Password erroneos","error")
             }
