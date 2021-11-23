@@ -361,9 +361,9 @@ const editExchangeById = async (req, res) => {
 const forceStartExchange = async (req, res) => {
   const { idExchange } = req.params;
 
-
   try {
     /* Obtenemos los participantes del intercambio */
+    /* Solo los confirmados y que seleccionaron 1 tema */
     const participants = await Participant.findAll({
       where: {
         id_exchange: idExchange,
