@@ -1,11 +1,11 @@
 
 //const { obtainAllExchanges } = require('../models/exchange');
 
-const { Exchange } = require('../models/exchange');
-const { Topic } = require('../models/topic');
-const { Participant } = require('../models/participant');
-const { User } = require('../models/user');
 const { Op } = require('sequelize');
+const { Exchange } = require('../models/Exchange');
+const { Topic } = require('../models/Topic');
+const { Participant } = require('../models/Participant');
+const { User } = require('../models/User');
 
 const createNewExchange = async (req, res) => {
   let { key, topics, maxValue, limitDate, date, owner, ownerParticipate, comments } = req.body;
