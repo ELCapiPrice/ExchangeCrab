@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
-const { login, helth_check , create_user, login_render} = require('../controllers/auth')
+const { login, helth_check , create_user, login_render ,get_users ,data_user } = require('../controllers/auth')
     //custom middleware que obtiene los errores
 const { validarCampos } = require('../middlewares/validar_campos')
 const router = new Router();
@@ -16,9 +16,9 @@ router.post('/login', [
     validarCampos
 ], login)
 
-
-
+router.get('/get-users', get_users );
 router.post('/create-user' , create_user);
+router.get('/user/:id' , data_user);
 
 
 

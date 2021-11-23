@@ -8,7 +8,7 @@ class Login {
 
     async login_user (){
         console.log(this.email , this.password);
-        await fetch(`http://localhost:7777/api/login`, {
+        await fetch('http://localhost:7777/api/login', {
             method: 'POST',
             credentials: 'include',
             mode: 'no-cors',
@@ -81,6 +81,7 @@ class Register {
 
     async  register (){
         console.log(this.email , this.password);
+        
         await fetch(`http://localhost:7777/api/create-user`, {
             method: 'POST',
             body: new URLSearchParams({

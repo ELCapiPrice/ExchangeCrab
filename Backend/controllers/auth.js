@@ -130,9 +130,55 @@ const helth_check= (req , res) =>{
         msg: "Running"
     })
 }
+
+
+
+const get_users = async (req, res)=>{
+    try {
+        const users = await User.findAll();
+        res.status(200).json(users);
+    } catch (e) {
+        res.status(400).json('Problema al solicitar tu peticion');
+        console.log(e);
+    }
+}
+
+const data_user = async (req , res)=>{
+
+    const {id} = req.params;
+    const user = await findOne({where: {id_user: id}});
+    if (user === null) {
+        res.status(400).json('Usuario no encontrado');
+    }else{
+        let  iduser= user.dataValues.id_user;
+        let  idunique=user.dataValues.id_unique;
+        let  username= user.dataValues.username;
+        let  firstname=user.dataValues.username;
+        let  lastname= user.dataValues.lastname;
+        let  email=user.dataValues.email;
+        let  activo=user.dataValues.is_active;
+
+        res.status(200).json(
+            iduser,
+            idunique,
+            username,
+            firstname,
+            lastname,
+            email,
+            activo
+        )
+    }
+
+
+
+}
+
+
 module.exports = {
     login,
     helth_check,
     create_user,
-    login_render
+    login_render,
+    get_users,
+    data_user
 }
