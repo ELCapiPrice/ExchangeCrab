@@ -1,10 +1,12 @@
 
 //const { obtainAllExchanges } = require('../models/exchange');
 
+const { Op } = require('sequelize');
 const { Exchange } = require('../models/Exchange');
 const { Topic } = require('../models/Topic');
 const { Participant } = require('../models/Participant');
 const { User } = require('../models/User');
+const { Friendship } = require('../models/Friendship');
 
 const createNewExchange = async (req, res) => {
   let { key, topics, maxValue, limitDate, date, owner, ownerParticipate, comments } = req.body;
@@ -114,9 +116,36 @@ const getExchangesByUserId = async (req, res) => {
       }
     });
 
+    let exchangesParticipate = [];
+
+    for(let i = 0; i < participants.length; i++) {
+      const exchangeParticipants = await Exchange.findOne({
+        where: {
+          id_exchange: participants[i].dataValues.id_exchange,
+          active: true
+        }
+      });
+      if(exchangeParticipants === null) continue;
+      exchangesParticipate.push(exchangeParticipants.dataValues);
+    }
+
+    let exchangeInvitations = [];
+    for(let i = 0; i < participants.length; i++) {
+      if(participants[i].dataValues.status != 0) continue;
+      const invitations = await Exchange.findAll({
+        where: {
+          id_exchange: participants[i].dataValues.id_exchange,
+          active: true
+        }
+      });
+      exchangeInvitations.push(invitations.dataValues);
+    }
+
     const data = {
       exchange,
-      participants
+      'participing': participants,
+      exchangesParticipate,
+      exchangeInvitations
     }
 
     return res.status(200).json(data);
@@ -127,7 +156,7 @@ const getExchangesByUserId = async (req, res) => {
 }
 
 const inviteParticipantByEmail = async (req, res) => {
-  const { email, exchangeId } = req.body;
+  const { email, key } = req.body;
 
   /* TODO Revisar si el usuario ya fue invitado */
 
@@ -136,18 +165,31 @@ const inviteParticipantByEmail = async (req, res) => {
     const user = await User.findOne({
       where: {
         email,
-        active: true
+        is_active: true
       }
     });
     if(user === null) return res.status(400).json({error: "El usuario no se encuentra registrado"});
 
+    const exchange = await Exchange.findOne({
+      where: {
+        key
+      }
+    });
+
+    const check = await Participant.findOne({
+      where: {
+        id_user: user.id_user,
+        active: true
+      }
+    });
+    if(check) return res.status(400).json({ msg: "Ese usuario ya fue invitado. "});
+
     /* Invitamos al participante a participar */
     const participant = await Participant.create({
-      id_exchange: exchangeId,
+      id_exchange: exchange.dataValues.id_exchange,
       id_user: user.id_user,
     });
     /* TODO Enviar mensaje por correo electronico de que recibio una nueva invitacion */
-
 
     return res.status(200).json({ msg: "Se invito al usuario a participar."});
   } catch (e) {
@@ -158,22 +200,36 @@ const inviteParticipantByEmail = async (req, res) => {
 
 const deleteExchangeById = async (req, res) => {
   const idExchange = req.body.idExchange;
+  const idUser = req.body.idUser;
 
   try {
+    /* Verificamos que el dueño es el que borra su intercambio */
+
+    const exchange = await Exchange.findOne({
+      where: {
+        owner : idUser,
+        id_exchange : idExchange
+      }
+    });
+
+    if(!exchange) return res.status(400).json({ error: "No eres el creador de ese intercambio"});
+
     /* Borramos logicamente el intercambio */
-    const exchange = await Exchange.update({
+    await Exchange.update({
       active: false
     }, {
       where: {
-        id_exchange: idExchange
+        id_exchange: idExchange,
+        owner : idUser
       }
     });
+
     /* Borramos logicamente los participantes del intercambio */
     const participant = await Participant.update({
       active: false
     }, {
       where: {
-        id_exchange: idExchange
+        id_exchange: idExchange,
       }
     });
     /* Borramos logicamente los temas del intercambio */
@@ -181,7 +237,7 @@ const deleteExchangeById = async (req, res) => {
       active: false
     }, {
       where: {
-        id_exchange: idExchange
+        id_exchange: idExchange,
       }
     });
     return res.status(200).json({ msg: "Se borro el intercambio correctamente."});
@@ -204,6 +260,14 @@ const joinExchangeByKey = async (req, res) => {
     });
     if(!exchange) return res.status(400).json({error: "Error, el código de intercambio no existe!"});
 
+    const participants = await Participant.findOne({
+      where: {
+        id_user: idUser,
+        status: true
+      }
+    });
+    if(participants) return res.status(400).json({error: "Error, ya estas registrado en ese intercambio!"});
+
     /* Unimos al usuario al intercambio */
     const participant = await Participant.create({
       topic,
@@ -217,7 +281,6 @@ const joinExchangeByKey = async (req, res) => {
     console.log(e);
     return res.status(400).json({error: "Error al unirse al intercambio"});
   }
-
 }
 
 const changeStatusOfParticipation = async (req, res) => {
@@ -247,6 +310,8 @@ const changeStatusOfParticipation = async (req, res) => {
 const deleteUserFromExchange = async (req, res) => {
   const { idUser, idExchange } = req.body;
 
+  console.log(idUser, idExchange);
+
   try {
     /* Buscar a participante y desactivar su campo active */
     const participant = await Participant.update({
@@ -266,10 +331,96 @@ const deleteUserFromExchange = async (req, res) => {
 }
 
 const editExchangeById = async (req, res) => {
-  //TODO Esta historia continuara...
+  const { idExchange,
+  maxValue,
+  limitDate,
+  date,
+  comments } = req.body;
 
-  //TODO Tus intercambios agregar otro boton de info
+  try {
+
+    /* Actualizamos los valores del intercambio */
+    const exchange = Exchange.update({
+      maxValue,
+      limitDate,
+      date,
+      comments
+    }, {
+      where: {
+        id_exchange: idExchange,
+        active: true
+      }
+    });
+
+    return res.status(200).json({ msg: "Se edito corrextamente el intercambio."});
+  } catch (e) {
+    console.log(e);
+    return res.status(400).json({error: "Error al editar el intercambio."});
+  }
 }
+
+const forceStartExchange = async (req, res) => {
+  const { idExchange } = req.params;
+
+  try {
+    /* Obtenemos los participantes del intercambio */
+    /* Solo los confirmados y que seleccionaron 1 tema */
+    const participants = await Participant.findAll({
+      where: {
+        id_exchange: idExchange,
+        status: 1,
+        topic: {
+          [Op.ne]: null
+        },
+        active: true
+      }
+    });
+    if(participants.length < 2) return res.status(400).json({ error: "Para forzar el inicio del intercambio se necesitan al menos 2 participantes confirmados."});
+
+    for(let i = 0; i < participants.length; i++) {
+      console.log(participants[i].dataValues);
+    }
+
+    return res.status(200).json({ msg: "Ok."});
+  } catch (e) {
+    console.log(e);
+    return res.status(400).json({error: "Error al forzar el intercambio."});
+  }
+}
+
+
+const addFriend  = async(req , res) =>{
+
+  const { email } = req.params;
+  const { email_ori, id_user } = req.body;
+
+  const myfriend = await User.findOne({where: {email}});
+
+  if (myfriend){
+    const exist = await Friendship.findOne({ where: { email_ori, id_user } });
+
+  if (exist !== null) {
+      return res.status(401).json("Ya son amigos");
+  } else {
+      const frienship = await Friendship.create({
+          email_ori,
+          email_des: email,
+          id_user
+      });
+      res.status(200).json("ok");
+  }
+
+  }else{
+     res.status(404).json({
+       msg: "Usuario no econtrado"
+     })
+  }
+
+
+  
+
+}
+
 
 
 module.exports = {
@@ -280,5 +431,8 @@ module.exports = {
   deleteExchangeById,
   joinExchangeByKey,
   changeStatusOfParticipation,
-  deleteUserFromExchange
+  deleteUserFromExchange,
+  editExchangeById,
+  forceStartExchange,
+  addFriend
 }

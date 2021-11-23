@@ -73,10 +73,37 @@ export const navbar = `
             <input class="form-check-input" type="checkbox" id="inputOwnerParticipate" name="ownerParticipate">
             <label class="form-check-label" for="inputOwnerParticipate">¿Deseas participar en el intercambio?</label>
           </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-success">Crear</button>
+          </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-          <button type="submit" class="btn btn-success">Crear</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="joinExchange" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="joinExchangeLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form name="createExchangeForm" onsubmit="return joinExchange(event);">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Unirse a un intercambio</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <label class="form-label" for="selectTopic">Escoge el tema para participar.</label>
+          <div class="input-group mb-3">
+            <select class="form-select" aria-label="Seleccionar tema" required="" id="selectTopic">
+            </select>
+          </div>
+          <p class="text-muted">Recuerda que el valor del producto debe ser $<span id="valueProduct">00.0</span></p>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-success">Unirse</button>
+          </div>
         </div>
       </form>
     </div>

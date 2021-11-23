@@ -8,20 +8,29 @@ class Login {
 
     async login_user (){
         console.log(this.email , this.password);
+        const info = {
+            email: this.email,
+            password: this.password
+        }
+
         await fetch('http://localhost:7777/api/login', {
             method: 'POST',
-            credentials: 'include',
-            mode: 'no-cors',
-            body: new URLSearchParams({
-                'email': this.email,
-                'password': this.password,
-            })
+            headers: {
+                "Accept": "*/*",
+                "Content-type": 'application/json',
+            },
+            body: JSON.stringify(info),
+            
         })
         .then(response => response.json())
         .then(data => {
             if (data.msg=='OK'){
                 this.createAltert("Iniciando Sesion.....","success")
-                console.log("token");
+                this.setCookie("token" , data.token , 10);
+                console.log(data.token);
+                console.log(this.parseJWT(this.getCookie()));
+                window.location.href = '/frontend/inicio.html'; 
+
             }else{
                 this.createAltert("Usuario / Password erroneos","error")
             }
@@ -32,7 +41,7 @@ class Login {
     createAltert(message , type){
         const  div_root = document.querySelector('#alerta');
         const alerta = document.createElement('div');
-        
+
         if (type=="error"){
             alerta.classList.add('alert', 'alert-danger')
             alerta.setAttribute('roler', 'alert');
@@ -42,16 +51,24 @@ class Login {
             alerta.setAttribute('roler', 'alert');
             alerta.textContent=message;
         }
-        
-    
+
+
         div_root.appendChild(alerta);
         setTimeout(() => {
             alerta.remove();
         }, 2500);
     }
 
+    setCookie(name,value,days) {
+        var expires = "";
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days*24*60*60*1000));
+            expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+    }
 
-  
     getCookie() {
         const value = `; ${document.cookie}`;
         const parts = value.split(`; token=`);
@@ -81,7 +98,7 @@ class Register {
 
     async  register (){
         console.log(this.email , this.password);
-        
+
         await fetch(`http://localhost:7777/api/create-user`, {
             method: 'POST',
             body: new URLSearchParams({
@@ -90,7 +107,6 @@ class Register {
                 'username': this.username,
                 'firstname': this.firstname,
                 'lastname':this.lastname,
-                'password':this.password
             })
         })
         .then(response => response.json())
@@ -109,7 +125,7 @@ class Register {
     createAltert(message , type){
         const  div_root = document.querySelector('#alerta');
         const alerta = document.createElement('div');
-        
+
         if (type=="error"){
             alerta.classList.add('alert', 'alert-danger')
             alerta.setAttribute('roler', 'alert');
@@ -119,8 +135,8 @@ class Register {
             alerta.setAttribute('roler', 'alert');
             alerta.textContent=message;
         }
-        
-    
+
+
         div_root.appendChild(alerta);
         setTimeout(() => {
             alerta.remove();
@@ -136,7 +152,7 @@ window.onload = async function(){
     const email = document.querySelector("#loginEmail")
     const password= document.querySelector("#loginPassword")
     const btn_submit_login = document.querySelector("#submit")
-    
+
 
     //REGISTER
     const btn_submit_register = document.querySelector("#registersubmit")
@@ -146,8 +162,8 @@ window.onload = async function(){
     const lastname_register= document.querySelector('#registerLastName')
     const password_register = document.querySelector('#registerPassword');
 
-   
-   
+
+
     btn_submit_login.addEventListener('click' , function(e){
         e.preventDefault();
         if (validatedata("login")){
@@ -157,7 +173,7 @@ window.onload = async function(){
             generaralert();
             return
         }
-    
+
     })
 
     btn_submit_register.addEventListener('click', function(e){
@@ -166,9 +182,9 @@ window.onload = async function(){
             console.log(email_register.value);
             const register= new Register(email_register.value , username_register.value , name_register.value , lastname_register.value , password_register.value);
             register.register();
-  
+
         }else{
-            generaralert();    
+            generaralert();
             return
         }
     })
@@ -176,7 +192,7 @@ window.onload = async function(){
 
     function validatedata(type){
         if (type=="login"){
-        return (email.value!=='' && password.value!=='') 
+        return (email.value!=='' && password.value!=='')
         }
         else{
         return (email_register.value!=='' && username_register.value!=='' && name_register.value!=='' && lastname_register.value!=='' && password_register.value!=='' )
@@ -197,7 +213,7 @@ window.onload = async function(){
 
     }
 
-    
+
 
 
 }

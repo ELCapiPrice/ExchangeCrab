@@ -31,7 +31,7 @@
             <label class="input-text" for="addFriend">Nombre o Correo</label>
             <input class="input-group-text container-fluid" type="text" id="addFriend" placeholder="Nombre o Correo"/>
             <div class="center-button mt-3">
-              <button class="button button-green p-2">
+              <button class="button button-green p-2" id="btnAddFriend">
                 Añadir amigo
               </button>
             </div>
@@ -55,7 +55,7 @@
               <input class="input-group-text container-fluid form-control" type="text" id="codeExchange" placeholder="Código del intercambio"/>
             </div>
             <div class="center-button mt-3">
-              <button class="button button-green p-2">
+              <button class="button button-green p-2" onclick="getTopicFromExchange();" data-bs-toggle="modal" data-bs-target="#joinExchange">
                 Unirse al intercambio
               </button>
             </div>
@@ -74,59 +74,10 @@
             </div>
 
             <div class="container">
-              <div class="row rectangle">
-
-                <div class="col-12 my-1">
-                  <div class="row rectangle-text">
-                    <div class="col-6">Intercambio de dulces</div>
-                    <div class="col-3">3 Month</div>
-                    <div class="col-3" style="font-size:0;">
-                      <div class="row justify-content-center">
-                        <div class="col-auto">
-                          <button onclick="window.location.href='description.html?id=1'" class="button button-info"><i class="fas fa-info-circle icon-medium info"></i></button>
-                        </div>
-                        <div class="col-auto">
-                          <button href="#" class="button button-info"><i class="fas fa-minus-circle icon-medium leave"></i></button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+              <div class="row rectangle" id="participing">
+                <div class="text-center text-danger text-decoration-underline" id="participing-none">
+                  <p class="mt-2 py-3">No participas en ningun intercambio :(</p>
                 </div>
-
-                <div class="col-12 my-1">
-                  <div class="row rectangle-text">
-                    <div class="col-6">Intercambio de zapatos</div>
-                    <div class="col-3">59 Min</div>
-                    <div class="col-3" style="font-size:0;">
-                      <div class="row justify-content-center">
-                        <div class="col-auto">
-                          <button onclick="window.location.href='description.html?id=2'" class="button button-info"><i class="fas fa-info-circle icon-medium info"></i></button>
-                        </div>
-                        <div class="col-auto">
-                          <button href="#" class="button button-info"><i class="fas fa-minus-circle icon-medium leave"></i></button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-12 my-1">
-                  <div class="row rectangle-text">
-                    <div class="col-6">Intercambio de electrónicos</div>
-                    <div class="col-3">3 week</div>
-                    <div class="col-3" style="font-size:0;">
-                      <div class="row justify-content-center">
-                        <div class="col-auto">
-                          <button onclick="window.location.href='description.html?id=3'" class="button button-info"><i class="fas fa-info-circle icon-medium info"></i></button>
-                        </div>
-                        <div class="col-auto">
-                          <button href="#" class="button button-info"><i class="fas fa-minus-circle icon-medium leave"></i></button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
               </div>
             </div>
           </div>
@@ -148,57 +99,10 @@
             </button>
 
             <div class="container">
-              <div class="row rectangle">
+              <div class="row rectangle" id="myExchanges">
 
-                <div class="col-12 my-1">
-                  <div class="row rectangle-text">
-                    <div class="col-6">Intercambio de monitores</div>
-                    <div class="col-3">#2842</div>
-                    <div class="col-3" style="font-size:0;">
-                      <div class="row justify-content-center">
-                        <div class="col-auto">
-                          <button href="#" class="button button-info"><i class="far fa-edit icon-medium info"></i></button>
-                        </div>
-                        <div class="col-auto">
-                          <button href="#" class="button button-info"><i class="far fa-trash-alt icon-medium leave"></i></button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-12 my-1">
-                  <div class="row rectangle-text">
-                    <div class="col-6">Intercambio de ropa</div>
-                    <div class="col-3">#1642</div>
-                    <div class="col-3" style="font-size:0;">
-                      <div class="row justify-content-center">
-                        <div class="col-auto">
-                          <button href="#" class="button button-info"><i class="far fa-edit icon-medium info"></i></button>
-                        </div>
-                        <div class="col-auto">
-                          <button href="#" class="button button-info"><i class="far fa-trash-alt icon-medium leave"></i></button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-12 my-1">
-                  <div class="row rectangle-text">
-                    <div class="col-6">Intercambio de carteras</div>
-                    <div class="col-3">#2232</div>
-                    <div class="col-3" style="font-size:0;">
-                      <div class="row justify-content-center">
-                        <div class="col-auto">
-                          <button href="#" class="button button-info"><i class="far fa-edit icon-medium info"></i></button>
-                        </div>
-                        <div class="col-auto">
-                          <button href="#" class="button button-info"><i class="far fa-trash-alt icon-medium leave"></i></button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                <div class="text-center text-danger text-decoration-underline" id="myExchanges-none">
+                  <p class="mt-2 py-3">No tienes creado ningun intercambio :(</p>
                 </div>
 
               </div>
@@ -220,42 +124,11 @@
             </div>
 
             <div class="container">
-              <div class="row rectangle">
+              <div class="row rectangle" id="myInvitations">
 
-                <div class="col-12 my-1">
-                  <div class="row rectangle-text">
-                    <div class="col-6">Intercambio de mazapanes</div>
-                    <div class="col-3">#2232</div>
-                    <div class="col-3" style="font-size:0;">
-                      <div class="row justify-content-center">
-                        <div class="col-auto">
-                          <button href="#" class="button button-info"><i class="fas fa-check-circle icon-medium info"></i></button>
-                        </div>
-                        <div class="col-auto">
-                          <button href="#" class="button button-info"><i class="fas fa-times-circle icon-medium leave"></i></button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                <div class="text-center text-danger text-decoration-underline" id="myInvitations-none">
+                  <p class="mt-2 py-3">No tienes ninguna invitación :(</p>
                 </div>
-
-                <div class="col-12 my-1">
-                  <div class="row rectangle-text">
-                    <div class="col-6">Intercambio de manzanas</div>
-                    <div class="col-3">#2232</div>
-                    <div class="col-3" style="font-size:0;">
-                      <div class="row justify-content-center">
-                        <div class="col-auto">
-                          <button href="#" class="button button-info"><i class="fas fa-check-circle icon-medium info"></i></button>
-                        </div>
-                        <div class="col-auto">
-                          <button href="#" class="button button-info"><i class="fas fa-times-circle icon-medium leave"></i></button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
 
               </div>
             </div>
@@ -269,7 +142,8 @@
   </div>
 </div>
 
-
+<script src="./js/config.js"></script>
+<!-- <script src="./js/inicio.js" type="module"></script> -->
 <script src="./js/index.js" type="module"></script>
 <script src="./js/exchange.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>

@@ -14,12 +14,12 @@ const login_render =(req , res)=>{
 
 const login = async(req, res = response) => {
 
-    const { email, password } = req.body;
+    let { email, password } = req.body;
     console.log(email , password)
     try {
 
         //Verificr si el email existe el
-        const usuario = await User.findOne({ where: {email} });
+        let usuario = await User.findOne({ where: {email} });
 
         if (!usuario) {
             return res.status(400).json({
@@ -37,7 +37,7 @@ const login = async(req, res = response) => {
         }
 
 
-        //Verificar constraseña 
+        //Verificar constraseña
         const validaPasword = bcrypt.compareSync(password, usuario.password);
 
         if (!validaPasword) {
@@ -53,9 +53,13 @@ const login = async(req, res = response) => {
 
         //Generar el JWT
         //const token = await generarJWT(usuario.id);
-       const token = await generarJWT(usuario.dataValues.id_unique, usuario.dataValues.email);
-       return  res.cookie("token","chuz").status(202).json({
-            msg : "OK"
+       const token = await generarJWT(usuario.dataValues.id_unique, usuario.dataValues.id_user ,usuario.dataValues.email);
+
+       
+
+       res.cookie("token","chuz" , {httpOnly:false}).status(202).json({
+            msg : "OK",
+            token
         })
 
     } catch (error) {
@@ -74,7 +78,7 @@ const login = async(req, res = response) => {
 
 const create_user = async (req , res)=>{
 
-    /* 
+    /*
          this.email=email;
         this.username=username;
         this.name=name;
@@ -109,13 +113,13 @@ const create_user = async (req , res)=>{
         delete password_cifrada;
 
         return res.status(201).json({message:"OK"});
-        
+
         }else {
 
         return res.status(400).json({message:"Usuario ya registrado"});
 
         }
-         
+
 
     }catch(e){
         res.status(400).json(message);
@@ -146,7 +150,7 @@ const get_users = async (req, res)=>{
 const data_user = async (req , res)=>{
 
     const {id} = req.params;
-    const user = await findOne({where: {id_user: id}});
+    const user = await User.findOne({where: {id_user: id}});
     if (user === null) {
         res.status(400).json('Usuario no encontrado');
     }else{
@@ -158,7 +162,7 @@ const data_user = async (req , res)=>{
         let  email=user.dataValues.email;
         let  activo=user.dataValues.is_active;
 
-        res.status(200).json(
+        res.status(200).json({
             iduser,
             idunique,
             username,
@@ -166,7 +170,7 @@ const data_user = async (req , res)=>{
             lastname,
             email,
             activo
-        )
+        })
     }
 
 

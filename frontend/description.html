@@ -23,10 +23,7 @@
       <div class="col-lg-4 col-md-6 col-12">
         <div class="bg-carmin px-2 py-2 mb-3">
           <p>Temas:</p>
-          <ul class="title-center list-group">
-            <li>XXXXXX</li>
-            <li>XXXXXX</li>
-            <li>XXXXXX</li>
+          <ul class="title-center list-group" id="topics">
           </ul>
         </div>
       </div>
@@ -47,20 +44,24 @@
       <div class="col-lg-4 col-md-6 col-12">
         <div class="bg-carmin px-2 py-2 mb-3">
           <p>Inicio:</p>
-          <p class="title-center">XX/XX/XX</p>
+          <p class="title-center" id="date">XX/XX/XX</p>
         </div>
       </div>
     </div>
   </div>
 
+  <div class="container">
+    <button id="forzar" class="btn btn-primary dontShow">Forzar inicio del intercambio</button>
+  </div>
+
   <h3 class="title-center title-guinda">Descripción</h3>
   <div class="container bg-light mt-3">
-    <p>Descripcion del intercambio. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
+    <p id="description">Descripcion del intercambio. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
   </div>
 
   <div class="container mb-3">
     <h3 class="title-guinda d-inline">Participantes</h3>
-    <button class="float-end button button-carmin p-1">
+    <button class="float-end button button-carmin p-1" data-bs-toggle="modal" data-bs-target="#inviteExchange">
       <i class="fas fa-plus icon-medium"></i>
       <i class="fas fa-male icon-medium"></i>
     </button>
@@ -73,57 +74,13 @@
           <th scope="col"></th>
           <th scope="col">First Name</th>
           <th scope="col">Last Name</th>
-          <th scope="col">status</th>
+          <th scope="col">Status</th>
           <th scope="col">Email</th>
           <th scope="col">Action</th>
         </tr>
         </thead>
-        <tbody>
-        <tr>
-          <th scope="row"><img src="./img/crab-logo.png" alt="crab logo" class="img-fluid"/></th>
-          <td>Jose Praxedes</td>
-          <td>Dominguez Acosta</td>
-          <td class="table-success">Confirmado</td>
-          <td>josepraxedes11@gmail.com</td>
-          <td>
-            <button class="button pb-1 button-blue">
-              <i class="fas fa-edit fa-sm"></i>
-            </button>
-            <button class="button pb-1 button-red">
-              <i class="far fa-trash-alt fa-sm"></i>
-            </button>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row"><img src="./img/crab-logo.png" alt="crab logo" class="img-fluid"/></th>
-          <td>Jorge......</td>
-          <td>.......</td>
-          <td class="table-success">Confirmado</td>
-          <td>example@gmail.com</td>
-          <td>
-            <button class="button pb-1 button-blue">
-              <i class="fas fa-edit fa-sm"></i>
-            </button>
-            <button class="button pb-1 button-red">
-              <i class="far fa-trash-alt fa-sm"></i>
-            </button>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row"><img src="./img/crab-logo.png" alt="crab logo" class="img-fluid"/></th>
-          <td>.......</td>
-          <td>..............</td>
-          <td class="table-danger">Rechazado</td>
-          <td>.....................</td>
-          <td>
-            <button class="button pb-1 button-blue">
-              <i class="fas fa-edit fa-sm"></i>
-            </button>
-            <button class="button pb-1 button-red">
-              <i class="far fa-trash-alt fa-sm"></i>
-            </button>
-          </td>
-        </tr>
+        <tbody id="participants">
+
         </tbody>
       </table>
     </div>
@@ -133,8 +90,37 @@
 
 </div>
 
+<div id="idExchange" class="dontShow"></div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="inviteExchange" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="inviteExchangeLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form name="inviteExchangeForm" onsubmit="return inviteParticipant(event);">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Invitar participantes</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <label class="form-label" for="inputInvite">Escribe el correo del usuario a invitar</label>
+          <div class="input-group mb-3">
+            <input type="email" class="form-control" aria-label="Correo electronico" required="" id="inputInvite" placeholder="Correo electronico" />
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-success">Invitar</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="./js/config.js"></script>
 <script src="./js/index.js" type="module"></script>
 <script src="./js/exchange.js"></script>
+<script src="./js/description.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -8,6 +8,7 @@ const {User} = require('./models/User')
 const { Exchange } = require('./models/Exchange')
 const { Topic } = require('./models/Topic')
 const { Participant } = require('./models/Participant')
+const {Friendship} = require('./models/Friendship')
 const cookieParser = require('cookie-parser');
 
 class Server {
@@ -39,7 +40,7 @@ class Server {
             await sequelize.authenticate();
             console.log('Conexion con la base de datos establecida'.green);
 
-            await Promise.all([User.sync(), Exchange.sync(), Topic.sync(), Participant.sync()]).then(()=> {
+            await Promise.all([User.sync(), Exchange.sync(), Topic.sync(), Participant.sync(), Friendship.sync() ]).then(()=> {
                 console.log("Modelos Creados");
             }).catch(err=>{
                 console.log("ERROR: " , err);
