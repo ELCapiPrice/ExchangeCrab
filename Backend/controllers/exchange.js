@@ -7,6 +7,7 @@ const { Topic } = require('../models/Topic');
 const { Participant } = require('../models/Participant');
 const { User } = require('../models/User');
 const { Friendship } = require('../models/Friendship');
+const { isEmailAddress } = require('../helpers/is_email');
 
 const createNewExchange = async (req, res) => {
   let { key, topics, maxValue, limitDate, date, owner, ownerParticipate, comments } = req.body;
@@ -391,16 +392,32 @@ const forceStartExchange = async (req, res) => {
 
 const addFriend  = async(req , res) =>{
 
+  /*
   const { email } = req.params;
   const { email_ori, id_user } = req.body;
 
-  const myfriend = await User.findOne({where: {email}});
+  is_email = isEmailAddress(email)
+  let myfriend='';
+
+  if (is_email){
+     myfriend = await User.findOne({where: {email}});
+  }else{
+     myfriend = await User.findOne({where: {username: email}});
+  }
+
+  console.log(is_email);
+  console.log(myfriend)
+*/
+  const { email } = req.params;
+  const { email_ori, id_user } = req.body;
+  const  myfriend = await User.findOne({where: {email}});
 
   if (myfriend){
     const exist = await Friendship.findOne({ where: { email_ori, id_user } });
 
+
   if (exist !== null) {
-      return res.status(401).json("Ya son amigos");
+      return res.status(401).json("ya son amigos");
   } else {
       const frienship = await Friendship.create({
           email_ori,
@@ -416,6 +433,7 @@ const addFriend  = async(req , res) =>{
      })
   }
 
+  
 
   
 

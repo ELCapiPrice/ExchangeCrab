@@ -46,7 +46,15 @@ window.onload = function () {
     const  btn_add_friend=document.querySelector('#btnAddFriend')
     
     btn_add_friend.addEventListener('click', ()=>{
-      addFriend(input_add_friend.value);
+    // addFriend(input_add_friend.value);
+    console.log(parseJWT(getCookie()));
+    // email del usuario autenticado
+    const jsonjwt =parseJWT(getCookie());
+    const email =  jsonjwt.email;
+    const id = jsonjwt.pk
+    console.log(email);
+    addFriend(email , input_add_friend.value, id)
+
     })
 
 }
@@ -245,6 +253,66 @@ async function deleteExchangeById(idExchange) {
 }
 
 
-async function addFriend(email){
-  
+async function addFriend (emailOrigen, emailDestino , id) {
+    console.log(emailOrigen , emailDestino);
+  if (emailOrigen == emailDestino) {
+      console.log("No puedes agregarte a ti mismo");
+      alerta(`No te puedes dar auto follow`, "error");
+      return
+  }
+
+  await fetch(`http://localhost:7777/api/add-friend/${emailDestino}`, {
+          method: 'POST',
+          body: new URLSearchParams({
+              'email_ori': emailOrigen,
+              'id_user': id,
+          })
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+          if (data == "ya son amigos") {
+              alerta(`Ya sigues a  ${emailDestino}, No puedes darle follow`, "error");
+          } else {
+              alerta(`Felicidades ya siigues a ${emailDestino}`);
+          }
+      })
+      .catch(err => console.log(err));
+
+}
+
+function alerta(message, error) {
+  const mensaje = document.createElement("div");
+  mensaje.classList.add('alert');
+  if (error === "error") {
+      mensaje.classList.add('alert-danger');
+  } else {
+      mensaje.classList.add('alert-success');
+  }
+  mensaje.textContent = message;
+
+  //agegar al dom
+  //Agregar al dom
+  const container = document.querySelector('#alertaDiv');
+  container.appendChild(mensaje);
+
+  //Quitar la laerta despues de 5 segundos 
+  setTimeout(() => {
+      mensaje.remove();
+  }, 2500);
+}
+
+function getCookie() {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; token=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
+function parseJWT(token) {
+  let base64Url = token.split('.')[1];
+  let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  let jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+  }).join(''));
+  return JSON.parse(jsonPayload);
 }

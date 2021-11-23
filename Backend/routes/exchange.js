@@ -43,7 +43,7 @@ router.post('/exchange',
   validarCampos,
   createNewExchange);
 
-router.post("/add-friend" , addFriend);
+router.post("/add-friend/:email" , addFriend);
 
 
 module.exports = router;
