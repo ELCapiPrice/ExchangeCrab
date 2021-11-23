@@ -14,12 +14,12 @@ const login_render =(req , res)=>{
 
 const login = async(req, res = response) => {
 
-    const { email, password } = req.body;
+    let { email, password } = req.body;
     console.log(email , password)
     try {
 
         //Verificr si el email existe el
-        const usuario = await User.findOne({ where: {email} });
+        let usuario = await User.findOne({ where: {email} });
 
         if (!usuario) {
             return res.status(400).json({
@@ -37,7 +37,7 @@ const login = async(req, res = response) => {
         }
 
 
-        //Verificar constraseña 
+        //Verificar constraseña
         const validaPasword = bcrypt.compareSync(password, usuario.password);
 
         if (!validaPasword) {
@@ -74,7 +74,7 @@ const login = async(req, res = response) => {
 
 const create_user = async (req , res)=>{
 
-    /* 
+    /*
          this.email=email;
         this.username=username;
         this.name=name;
@@ -109,13 +109,13 @@ const create_user = async (req , res)=>{
         delete password_cifrada;
 
         return res.status(201).json({message:"OK"});
-        
+
         }else {
 
         return res.status(400).json({message:"Usuario ya registrado"});
 
         }
-         
+
 
     }catch(e){
         res.status(400).json(message);

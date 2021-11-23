@@ -374,7 +374,7 @@ const forceStartExchange = async (req, res) => {
         active: true
       }
     });
-    //if(participants.length < 2) return res.status(400).json({ error: "Para forzar el inicio del intercambio se necesitan al menos 2 participantes confirmados."});
+    if(participants.length < 2) return res.status(400).json({ error: "Para forzar el inicio del intercambio se necesitan al menos 2 participantes confirmados."});
 
     for(let i = 0; i < participants.length; i++) {
       console.log(participants[i].dataValues);
