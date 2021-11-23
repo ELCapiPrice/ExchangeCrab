@@ -1,13 +1,13 @@
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
-const generarJWT = (uid = '') => {
+const generarJWT = (uid = '', pk='' , email='') => {
     return new Promise((resolve, reject) => {
 
         //verificar solo el uid
-        const payload = { uid };
+        const payload = { uid  , pk , email};
         jwt.sign(payload, 'secretkey', {
-            expiresIn: '4h'
+            expiresIn: '24h'
         }, (err, token) => {
             if (err) {
                 console.log(err);

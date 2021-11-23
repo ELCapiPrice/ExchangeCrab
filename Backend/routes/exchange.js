@@ -12,7 +12,8 @@ const { getExchangeByKey,
   changeStatusOfParticipation,
   deleteUserFromExchange,
   editExchangeById,
-  forceStartExchange } = require('../controllers/exchange');
+  forceStartExchange,
+  addFriend } = require('../controllers/exchange');
 
 
 router.get('/exchange/key/:key', getExchangeByKey);
@@ -41,6 +42,8 @@ router.post('/exchange',
   check('owner', 'No se especifico el dueño del intercambio').not().isEmpty(),
   validarCampos,
   createNewExchange);
+
+router.post("/add-friend" , addFriend);
 
 
 module.exports = router;

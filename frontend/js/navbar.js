@@ -24,6 +24,9 @@ export const navbar = `
             <a class="nav-link active title-text" type="button" data-bs-toggle="modal" data-bs-target="#createExchange">Crear intercambio</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link active title-text" aria-current="page" href="amigos.html">Añadir amigos</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link active title-text" href="auth.html">Cerrar Sesión</a>
           </li>
         </ul>
