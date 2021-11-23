@@ -51,16 +51,29 @@ async function getExhcnageById () {
 
     const participants = document.getElementById('participants');
     for(let i = 0; i < data.participants.length; i++) {
+
+      let userInfo = await fetch(`${baseURL}/user/${data.participants[i].id_user}`, {
+        method: 'get',
+        headers: {
+          "Accept": "*/*",
+          "Content-type": 'application/json',
+        }
+      });
+      userInfo = await userInfo.json();
+      console.log(userInfo);
+
       let status = `table-info`;
       let status2 = `Pendiente`;
       status = data.participants[i].status == 1 ? 'table-success' : data.participants[i].status == 2 ? 'table-danger' : 'table-secondary';
       status2 = data.participants[i].status == 1 ? 'Confirmado' : data.participants[i].status == 2 ? 'Rechazado' : 'Pendiente';
       const cardHTML = `
-        <th scope="row"><img src="./img/crab-logo.png" alt="crab logo" class="img-fluid"/></th>
-        <td>Jose Praxedes</td>
-        <td>Dominguez Acosta</td>
+        <th scope="row">${data.participants[i].id_user}<img src="./img/crab-logo.png" alt="crab logo" class="img-fluid"/></th>
+        <td>${userInfo.firstname}</td>
+        <td>${userInfo.lastname}</td>
+        <td>${userInfo.email}</td>
+        <td>${data.participants[i].topic || 'Sin especificar'}</td>
         <td class="${status}">${status2}</td>
-        <td>josepraxedes11@gmail.com</td>
+        <td>${data.participants[i].userToGift || 'Sin definir'}</td>
         <td>
           <!--<button class="button pb-1 button-blue">
             <i class="fas fa-edit fa-sm"></i>

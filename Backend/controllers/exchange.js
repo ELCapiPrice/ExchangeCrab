@@ -378,9 +378,33 @@ const forceStartExchange = async (req, res) => {
     });
     if(participants.length < 2) return res.status(400).json({ error: "Para forzar el inicio del intercambio se necesitan al menos 2 participantes confirmados."});
 
-    for(let i = 0; i < participants.length; i++) {
-      console.log(participants[i].dataValues);
+    let reciben = {};
+    let yaRecibieron = [];
+    for (let i = 0; i < participants.length; i++) {
+      let rand;
+      let j = 0;
+      do {
+        rand = Math.floor(Math.random() * ((participants.length-1) - (0) + 1) + (0));
+        if(rand === i) rand++;
+        if(rand >= participants.length) rand = rand-2;
+        if(j === 100) break;
+        j++;
+      } while (yaRecibieron.includes(participants[rand].id_user));
+
+      await Participant.update({
+        userToGift: participants[rand].id_user
+      }, {
+        where: {
+          id_user: participants[i].id_user
+        }
+      });
+      //console.log(i, rand);
+      reciben[`${participants[i].id_user}`] = { 'dioRegaloA': participants[rand].id_user}
+      yaRecibieron.push(participants[rand].id_user);
+      console.log(reciben);
     }
+    //console.log(yaRecibieron);
+
 
     return res.status(200).json({ msg: "Ok."});
   } catch (e) {
