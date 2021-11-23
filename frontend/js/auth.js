@@ -19,13 +19,17 @@ class Login {
                 "Accept": "*/*",
                 "Content-type": 'application/json',
             },
-            body: JSON.stringify(info)
+            body: JSON.stringify(info),
+            
         })
         .then(response => response.json())
         .then(data => {
             if (data.msg=='OK'){
                 this.createAltert("Iniciando Sesion.....","success")
-                console.log("token");
+                this.setCookie("token" , data.token , 10);
+                console.log(data.token);
+                console.log(this.parseJWT(this.getCookie()));
+
             }else{
                 this.createAltert("Usuario / Password erroneos","error")
             }
@@ -54,7 +58,15 @@ class Login {
         }, 2500);
     }
 
-
+    setCookie(name,value,days) {
+        var expires = "";
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days*24*60*60*1000));
+            expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+    }
 
     getCookie() {
         const value = `; ${document.cookie}`;

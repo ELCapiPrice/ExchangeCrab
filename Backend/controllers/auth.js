@@ -53,9 +53,13 @@ const login = async(req, res = response) => {
 
         //Generar el JWT
         //const token = await generarJWT(usuario.id);
-       const token = await generarJWT(usuario.dataValues.id_unique, usuario.dataValues.email);
-       return  res.cookie("token","chuz").status(202).json({
-            msg : "OK"
+       const token = await generarJWT(usuario.dataValues.id_unique, usuario.dataValues.id_user ,usuario.dataValues.email);
+
+       
+
+       res.cookie("token","chuz" , {httpOnly:false}).status(202).json({
+            msg : "OK",
+            token
         })
 
     } catch (error) {
