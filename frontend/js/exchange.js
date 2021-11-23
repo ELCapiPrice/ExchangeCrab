@@ -9,6 +9,7 @@ async function createExchange(event) {
     const date = document.getElementById('inputDate').value;
     let comments = document.getElementById('inputComments').value;
     const ownerParticipate = document.getElementById('inputOwnerParticipate').checked;
+    
     if(!key || !topics || !maxValue || !limitDate || !date || !ownerParticipate || !owner) return alert('Error al leer los datos de los inputs');
     if(!comments) comments = "";
     const info = {
@@ -41,6 +42,13 @@ async function createExchange(event) {
 
 window.onload = function () {
     getExchangesOfUser();
+    const  input_add_friend = document.querySelector('#addFriend');
+    const  btn_add_friend=document.querySelector('#btnAddFriend')
+    
+    btn_add_friend.addEventListener('click', ()=>{
+      addFriend(input_add_friend.value);
+    })
+
 }
 
 /* Obtener la información de los intercambios del usuario */
@@ -234,4 +242,9 @@ async function deleteExchangeById(idExchange) {
         console.log(e);
     }
 
+}
+
+
+async function addFriend(email){
+  
 }

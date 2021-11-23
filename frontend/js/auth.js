@@ -29,6 +29,7 @@ class Login {
                 this.setCookie("token" , data.token , 10);
                 console.log(data.token);
                 console.log(this.parseJWT(this.getCookie()));
+                window.location.href = '/frontend/inicio.html'; 
 
             }else{
                 this.createAltert("Usuario / Password erroneos","error")

@@ -6,6 +6,7 @@ const { Exchange } = require('../models/Exchange');
 const { Topic } = require('../models/Topic');
 const { Participant } = require('../models/Participant');
 const { User } = require('../models/User');
+const { Friendship } = require('../models/Friendship');
 
 const createNewExchange = async (req, res) => {
   let { key, topics, maxValue, limitDate, date, owner, ownerParticipate, comments } = req.body;
@@ -388,6 +389,39 @@ const forceStartExchange = async (req, res) => {
 }
 
 
+const addFriend  = async(req , res) =>{
+
+  const { email } = req.params;
+  const { email_ori, id_user } = req.body;
+
+  const myfriend = await User.findOne({where: {email}});
+
+  if (myfriend){
+    const exist = await Friendship.findOne({ where: { email_ori, id_user } });
+
+  if (exist !== null) {
+      return res.status(401).json("Ya son amigos");
+  } else {
+      const frienship = await Friendship.create({
+          email_ori,
+          email_des: email,
+          id_user
+      });
+      res.status(200).json("ok");
+  }
+
+  }else{
+     res.status(404).json({
+       msg: "Usuario no econtrado"
+     })
+  }
+
+
+  
+
+}
+
+
 
 module.exports = {
   getExchangeByKey,
@@ -399,5 +433,6 @@ module.exports = {
   changeStatusOfParticipation,
   deleteUserFromExchange,
   editExchangeById,
-  forceStartExchange
+  forceStartExchange,
+  addFriend
 }
