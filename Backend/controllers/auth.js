@@ -55,7 +55,7 @@ const login = async(req, res = response) => {
         //const token = await generarJWT(usuario.id);
        const token = await generarJWT(usuario.dataValues.id_unique, usuario.dataValues.id_user ,usuario.dataValues.email);
 
-       
+
 
        res.cookie("token","chuz" , {httpOnly:false}).status(202).json({
             msg : "OK",
@@ -157,7 +157,7 @@ const data_user = async (req , res)=>{
         let  iduser= user.dataValues.id_user;
         let  idunique=user.dataValues.id_unique;
         let  username= user.dataValues.username;
-        let  firstname=user.dataValues.username;
+        let  firstname=user.dataValues.firstname;
         let  lastname= user.dataValues.lastname;
         let  email=user.dataValues.email;
         let  activo=user.dataValues.is_active;

@@ -353,7 +353,7 @@ const editExchangeById = async (req, res) => {
       }
     });
 
-    return res.status(200).json({ msg: "Se edito corrextamente el intercambio."});
+    return res.status(200).json({ msg: "Se edito correctamente el intercambio."});
   } catch (e) {
     console.log(e);
     return res.status(400).json({error: "Error al editar el intercambio."});
@@ -457,9 +457,9 @@ const addFriend  = async(req , res) =>{
      })
   }
 
-  
 
-  
+
+
 
 }
 

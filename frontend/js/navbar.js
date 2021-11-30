@@ -109,4 +109,44 @@ export const navbar = `
     </div>
   </div>
 </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="editExchange" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editExchangeLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form name="editExchangeForm" onsubmit="return editExchange(event);">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Editar el intercambio</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="input-group mb-3">
+            <input type="text" id="editIdExchange" class="form-control" hidden />
+          </div>
+          <label class="form-label" for="editMaxValue">Valor del intercambio:</label>
+          <div class="input-group mb-3">
+            <input type="number" id="editMaxValue" class="form-control" required />
+          </div>
+          <label class="form-label" for="editLimitDate">Fecha limite para participar:</label>
+          <div class="input-group mb-3">
+            <input type="date" id="editLimitDate" class="form-control" required />
+          </div>
+          <label class="form-label" for="editDate">Fecha de inicio:</label>
+          <div class="input-group mb-3">
+            <input type="date" id="editDate" class="form-control" required />
+          </div>
+          <label class="form-label" for="editDate">Comentarios:</label>
+          <div class="input-group mb-3">
+            <textarea class="form-control" id="editComments" aria-label="Comentarios" ></textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-success">Editar</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 `;
