@@ -23,7 +23,13 @@ function parseJWT(token) {
   return JSON.parse(jsonPayload);
 }
 
-const userInfo = parseJWT(getCookie());
+
+const token = getCookie();
+if(!token) {
+  alert("¡Debes iniciar sesión!");
+  location.href = "auth.html";
+}
+const userInfo = parseJWT(token);
 console.log(userInfo);
 
 const owner = userInfo.pk;
