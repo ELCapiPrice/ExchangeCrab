@@ -138,16 +138,21 @@ const getExchangesByUserId = async (req, res) => {
     }
 
     let exchangeInvitations = [];
+    //console.log(participants);
     for(let i = 0; i < participants.length; i++) {
       if(participants[i].dataValues.status != 0) continue;
-      const invitations = await Exchange.findAll({
+      console.log("Entra");
+      const invitations = await Exchange.findOne({
         where: {
           id_exchange: participants[i].dataValues.id_exchange,
           active: true
         }
       });
+      //console.log(invitations.dataValues);
       exchangeInvitations.push(invitations.dataValues);
     }
+
+    //console.log(exchangeInvitations);
 
     const data = {
       exchange,
@@ -186,6 +191,7 @@ const inviteParticipantByEmail = async (req, res) => {
 
     const check = await Participant.findOne({
       where: {
+        id_exchange: exchange.id_exchange,
         id_user: user.id_user,
         active: true
       }
