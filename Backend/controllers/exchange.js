@@ -8,6 +8,8 @@ const { Participant } = require('../models/Participant');
 const { User } = require('../models/User');
 const { Friendship } = require('../models/Friendship');
 const { isEmailAddress } = require('../helpers/is_email');
+const  {emailConfirmacion} = require('../utils/sendEmail')
+
 
 const createNewExchange = async (req, res) => {
   let { key, topics, maxValue, limitDate, date, owner, ownerParticipate, comments } = req.body;
@@ -22,6 +24,8 @@ const createNewExchange = async (req, res) => {
 
   //Obtenemos una lista de los temas
   topics = topics.replaceAll(' ', '').split(',');
+  let user = await User.findOne({ where: {id_user: owner} });
+  let  email=user.dataValues.email;
 
   try {
     /* TODO Verificar que la clave de intercambio no exista */
@@ -59,11 +63,13 @@ const createNewExchange = async (req, res) => {
     console.log(e);
     return res.status(401).json({ error: "Error al crear el intercambio"});
   }
+  await emailConfirmacion (email , key)
   return res.status(200).json({ msg: "Se creo el intercambio correctamente"});
 }
 
 const getExchangeByKey = async (req, res) => {
   const key = req.params.key;
+
 
   try {
     const exchange = await Exchange.findOne({
@@ -92,6 +98,7 @@ const getExchangeByKey = async (req, res) => {
       participants,
       topics
     }
+
     return res.status(200).json(data);
   } catch (e) {
     console.log(e);
@@ -251,6 +258,9 @@ const deleteExchangeById = async (req, res) => {
 const joinExchangeByKey = async (req, res) => {
   const { key, topic, idUser } = req.body;
 
+  let user = await User.findOne({ where: {id_user: idUser} });
+  let  email=user.dataValues.email;
+
   try {
     /* Obtenemos la informacion del intercambio */
     const exchange = await Exchange.findOne({
@@ -276,6 +286,8 @@ const joinExchangeByKey = async (req, res) => {
       id_user: idUser,
       status: 1
     });
+
+  await emailConfirmacion (email , key)
 
     return res.status(200).json({ msg: "Te has unido exitosamente al intercambio."});
   } catch (e) {

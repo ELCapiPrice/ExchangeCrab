@@ -224,7 +224,7 @@ async function joinExchange(event) {
     });
     data = await data.json();
     console.log(data);
-    location.reload();
+   location.reload();
   } catch (e) {
     console.log(e);
   }
