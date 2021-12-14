@@ -13,44 +13,47 @@
 </head>
 <body>
 
+<div id="loader-wrapper"></div>
+
 <nav class="navbar navbar-expand-lg navbar-light bg-navbar ps-4">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">
+    <a class="navbar-brand" href="inicio.html">
       <img src="img/crab-logo.png" alt="crab-logo" width="73px" height="40px" class="d-inline-block align-text-top">
       <span class="title-text">Exchange Crabs</span>
     </a>
   </div>
 </nav>
-<div class="bg-main">
 
+<main class="bg-main">
   <div class="container">
 
-    <div class="alerta" id="alerta">
-      
-    </div>
+    <div class="alerta" id="alerta"></div>
 
     <div class="row align-content-center justify-content-center space">
-      <div class="col-lg-6 col-7">
-        <div>
-          <img src="./img/crabLogo.png" alt="Logo de cangrejo crabExchanger" class="img-fluid"/>
-          <h1 class="text-center title-login">WELCOME CRAB</h1>
-        </div>
-      </div>
 
-      <div class="col-lg-4 col-12 col-sm-8">
-        <div class="container bg-gray py-3 mb-3">
+      <figure class="col-lg-6 col-7">
+        <img src="./img/crabLogoRemaster.png" alt="Logo de cangrejo crabExchanger" class="img-fluid"/>
+        <h1 class="text-center title-login">WELCOME CRAB</h1>
+      </figure>
+
+      <aside class="col-lg-4 col-12 col-sm-8">
+        <section id="sectionLogin" class="container bg-gray py-3 mb-3 shadow-lg">
+          <h3 class="loginTitle">Iniciar sesión</h3>
+          <p class="descriptionTitle">Tu cuenta te permite un fácil acceso a la creacion de intercambios y revisar su estado.</p>
           <form action="#" method="get">
             <div class="input-group mb-3">
-              <input type="text" placeholder="Email" class="form-control input-login" id="loginEmail"/>
+              <input type="text" placeholder="Correo" class="form-control input-login" id="loginEmail"/>
             </div>
             <div class="input-group mb-3">
               <input type="password" placeholder="Contraseña" class="form-control input-login" id="loginPassword"/>
             </div>
             <button type="submit" id="submit" class="button button-carmin container-fluid py-2">Login</button>
           </form>
-        </div>
+        </section>
 
-        <div class="container bg-gray py-3 mb-3">
+        <section id="sectionRegister" class="container bg-gray py-3 mb-3">
+          <h3 class="loginTitle">Crear una cuenta</h3>
+          <p class="descriptionTitle">Registra una nueva cuenta para empezar a crear intercambios.</p>
           <form action="#" method="get">
             <div class="input-group mb-3">
               <input type="text" placeholder="Nombres " class="form-control input-login" id="registerName"/>
@@ -62,7 +65,7 @@
               <input type="text" placeholder="Alias" class="form-control input-login" id="registerAlias"/>
             </div>
             <div class="input-group mb-3">
-              <input type="email" placeholder="Email" class="form-control input-login" id="registerEmail"/>
+              <input type="email" placeholder="Correo" class="form-control input-login" id="registerEmail"/>
             </div>
             <div class="input-group mb-3">
               <input type="password" placeholder="Contraseña" class="form-control input-login" id="registerPassword"/>
@@ -73,14 +76,15 @@
             </div>
             <button type="submit" id="registersubmit" class="button button-carmin container-fluid py-2">Registrarse</button>
           </form>
-        </div>
+        </section>
 
-      </div>
+      </aside>
     </div>
   </div>
 
-</div>
+</main>
 
+<script src="./js/config.js"></script>
 <script src="./js/index.js" type="module"></script>
 <script src="./js/auth.js" type="module"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>

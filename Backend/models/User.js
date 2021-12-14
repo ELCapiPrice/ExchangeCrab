@@ -33,14 +33,6 @@ const User = sequelize.define("user", {
         type: Sequelize.STRING,
         allowNull: false
     },
-    list_exchange_room: {
-        type: Sequelize.INTEGER,
-        allowNull: true
-    },
-    last_connected: {
-        type: Sequelize.DATE,
-        allowNull: true
-    },
     is_active: {
         type: Sequelize.BOOLEAN,
         defaultValue: true

@@ -1,7 +1,7 @@
 export const navbar = `
 <nav class="navbar navbar-expand-lg navbar-light bg-navbar ps-4">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">
+    <a class="navbar-brand" href="inicio.html">
       <img src="img/crab-logo.png" alt="crab-logo" width="73px" height="40px" class="d-inline-block align-text-top">
       <span class="title-text">Exchange Crabs</span>
     </a>
@@ -27,7 +27,7 @@ export const navbar = `
             <a class="nav-link active title-text" aria-current="page" href="amigos.html">Añadir amigos</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active title-text" href="auth.html">Cerrar Sesión</a>
+            <a class="nav-link active title-text" href="auth.html" onclick="cerrarSesion();">Cerrar Sesión</a>
           </li>
         </ul>
       </div>

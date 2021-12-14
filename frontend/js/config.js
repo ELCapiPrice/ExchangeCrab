@@ -4,9 +4,11 @@ const host = 'localhost:7777';
 const domain = `${protocol}://${host}`;
 const baseURL = `${domain}/api`;
 
-/* TODO Cambiar este número por el id del usuario real. (Hasta que se implemente el sistema de logeo) */
-/* Obtenemos el id del usuario de las cookies */
-
+/* Revisamos que el API funcione correctamente */
+( async () => {
+  await fetch(`${baseURL}/helth-check`).catch( (e) => alert("El API no esta funcionando. La pagina no funcionara...") );
+  document.getElementById('loader-wrapper').classList.add('dontShow');
+})();
 
 function getCookie() {
   const value = `; ${document.cookie}`;
@@ -23,13 +25,35 @@ function parseJWT(token) {
   return JSON.parse(jsonPayload);
 }
 
+let owner = 2;
+/* Obtenemos el archivo en el que se encuenta */
+let ruta = location.href.split('/');
+ruta = ruta[ruta.length - 1];
 
-const token = getCookie();
-if(!token) {
-  alert("¡Debes iniciar sesión!");
-  location.href = "auth.html";
+/* Verificamos la sesion del usuario */
+const token = getCookie(); //Obtenemos los datos de la cookie
+if(!token) { //Si existen esos datos
+
+  /* Si no se encuentra en el auth, entonces debe iniciar sesión */
+  if(ruta !== 'auth.html'){
+    alert("¡Debes iniciar sesión!");
+    location.href = "auth.html";
+  }
+
+} else { //Si si encontro el token
+
+  /* Y se encuentra en la pagina de autentificación. */
+  if(ruta === "auth.html") {
+    alert("¡Ya has iniciado sesión!");
+    location.href = "inicio.html";
+  }
+
+  const userInfo = parseJWT(token); //Obtenemos su informacion de el
+  console.log(userInfo);
+  owner = userInfo.pk; //Y guardamos su id del usuario en la variable owner para saber quien es.
 }
-const userInfo = parseJWT(token);
-console.log(userInfo);
 
-const owner = userInfo.pk;
+
+function cerrarSesion() {
+  document.cookie = `token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
+}

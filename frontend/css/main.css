@@ -23,7 +23,7 @@ body, html {
 }
 
 .bg-main {
-  background: url("../img/background.jpg") center top / cover no-repeat rgb(187, 209, 233);
+  background: url("../img/backgroundRemaster.jpg") center top / cover no-repeat rgb(187, 209, 233);
   min-height: 100%;
   width: 100%;
   margin-right: auto;
@@ -189,13 +189,30 @@ body, html {
 }
 
 .bg-gray {
-  background-color: rgb(224, 230, 233);
+  background-color: #f8e3b1;
+  border: .2rem dashed #A31F2C;
   border-radius: 5px;
+  animation: christmas 3s ease infinite;
+}
+
+@keyframes christmas {
+  0% {
+    border-color: #A31F2C;
+  }
+  25% {
+    border-color: #709d5e;
+  }
+  50% {
+    border-color: #A31F2C;
+  }
+  75% {
+    border-color: #709d5e;
+  }
 }
 
 .button-carmin {
   cursor: pointer;
-  background: -webkit-linear-gradient(top, rgb(247, 173, 143) 0%, rgb(214, 100, 77) 100%);
+  background: -webkit-linear-gradient(top, #A7BA59 0%, #BFDD82 100%);
   border: 1px none rgb(127, 149, 235);
   text-align: center;
   font-family: Krub, sans-serif;
@@ -223,11 +240,27 @@ body, html {
   margin-bottom: 75px;
 }
 
+.loginTitle {
+  margin: 0 0 8px 0;
+  padding: 0;
+  font-size: 26px;
+  font-family: 'Source Sans Pro','Trebuchet MS','Droid Sans',sans-serif;
+  line-height: 26px;
+  color: rgb(65, 65, 65);
+}
+
+.descriptionTitle {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  line-height: 26px;
+  color: rgb(65, 65, 65);
+}
+
 .title-login {
   white-space: pre-wrap;
   overflow: visible;
   font-family: Georgia, sans-serif;
-  font-size: xxx-large;
+  /*font-size: calc(100vw/35);*/
   color: rgb(128, 0, 0);
   line-height: 1.4;
   border-radius: 0;
@@ -277,4 +310,13 @@ body, html {
 
 .button-red {
   background-color: rgb(255, 0, 0)
+}
+
+#loader-wrapper {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: #222222;
+  z-index: 1000;
 }

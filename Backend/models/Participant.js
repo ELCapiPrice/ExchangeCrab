@@ -23,25 +23,33 @@ const Participant = sequelize.define("participant", {
       key: 'id_exchange'
     }
   },
-  id_user: { //ID del usuario que participa
+  email: { //Correo del participante
+    type: Sequelize.STRING,
+    allowNull: true,
+  },
+  firstname: { //Correo del participante
+    type: Sequelize.STRING,
+    allowNull: true,
+  },
+  lastname: { //Correo del participante
+    type: Sequelize.STRING,
+    allowNull: true,
+  },
+  /*id_user: { //ID del usuario que participa
     type: Sequelize.INTEGER,
     allowNull: false,
     references: {
       model: 'users',
       key: 'id_user'
     }
-  },
+  },*/
   status: { //Estado de su participacion
     type: Sequelize.INTEGER,
     defaultValue: 0 // 0 - Pendiente. 1 - Aceptado. 2 - Rechazado
   },
-  userToGift: { //ID del usuario al que le tiene que dar regalo
-    type: Sequelize.INTEGER,
+  userToGift: { //correo del usuario al que le va a dar regalo
+    type: Sequelize.STRING,
     allowNull: true,
-    references: {
-      model: 'users',
-      key: 'id_user'
-    }
   },
   active: {
     type: Sequelize.BOOLEAN,
