@@ -432,48 +432,18 @@ const forceStartExchange = async (req, res) => {
 }
 
 
-const addFriend  = async(req , res) =>{
-
-  /*
-  const { email } = req.params;
-  const { email_ori, id_user } = req.body;
-
-  is_email = isEmailAddress(email)
-  let myfriend='';
-
-  if (is_email){
-     myfriend = await User.findOne({where: {email}});
-  }else{
-     myfriend = await User.findOne({where: {username: email}});
-  }
-
-  console.log(is_email);
-  console.log(myfriend)
-*/
-  const { email } = req.params;
-  const { email_ori, id_user } = req.body;
-  const  myfriend = await User.findOne({where: {email}});
-
-  if (myfriend){
-    const exist = await Friendship.findOne({ where: { email_ori, id_user } });
+const  list_exchanges= async(req , res) =>{
 
 
-  if (exist !== null) {
-      return res.status(401).json("ya son amigos");
-  } else {
-      const frienship = await Friendship.create({
-          email_ori,
-          email_des: email,
-          id_user
-      });
-      res.status(200).json("ok");
-  }
+  const exchanges = await Exchange.findAll({where: {active: true}});
 
-  }else{
-     res.status(404).json({
-       msg: "Usuario no econtrado"
-     })
-  }
+  if (exchanges){
+  return  res.status(200).json(exchanges)
+  } 
+
+  return res.status(401).json("UPPS Problemas la procesar la peticion")
+
+
 
 
 
@@ -494,5 +464,5 @@ module.exports = {
   deleteUserFromExchange,
   editExchangeById,
   forceStartExchange,
-  addFriend
+  list_exchanges
 }
