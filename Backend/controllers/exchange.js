@@ -472,6 +472,7 @@ const editExchangeById = async (req, res) => {
   }
 }
 
+
 const forceStartExchange = async (req, res) => {
   const { idExchange } = req.params;
 
