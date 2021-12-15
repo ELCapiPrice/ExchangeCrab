@@ -9,6 +9,7 @@ const { User } = require('../models/User');
 const { Friendship } = require('../models/Friendship');
 const { isEmailAddress } = require('../helpers/is_email');
 const  {emailConfirmacion} = require('../utils/sendEmail');
+const {login} = require("./auth");
 
 
 /* Cuando invitas a un participante */
@@ -42,11 +43,6 @@ const inviteParticipant = async (req, res) => {
 
   // Ya te deje las variables KEY y EMAIL para que lo envies
 
-
-}
-
-/* Cuando un participante acepta o rechaza una invitación */
-const changeStatusParticipant = async (req, res) => {
 
 }
 
@@ -120,6 +116,19 @@ const joinExchangeByKey = async (req, res) => {
   }
 }
 
+/* GET */
+const getTopicsByExchangeId = async (req, res) => {
+  /* Ejemplo para consultar los topics */
+  /* localhost:7777/api/exchange/getTopics?exchangeId=3 */
+  const { exchangeId } = req.params;
+
+  return Topic.findAll({
+    where: {
+      id_exchange: exchangeId,
+      active: true
+    }
+  }).catch( err => res.status(500).json({error: "Error al obtener los intercambios por su id: " + err.message }));
+}
 
 
 
@@ -192,8 +201,6 @@ const createNewExchange = async (req, res) => {
 
 const getExchangeByKey = async (req, res) => {
   const key = req.params.key;
-
-
   try {
     const exchange = await Exchange.findOne({
       where: {
@@ -547,5 +554,6 @@ module.exports = {
   deleteUserFromExchange,
   editExchangeById,
   forceStartExchange,
-  list_exchanges
+  list_exchanges,
+  getTopicsByExchangeId
 }
