@@ -8,8 +8,10 @@ const { Participant } = require('../models/Participant');
 const { User } = require('../models/User');
 const { Friendship } = require('../models/Friendship');
 const { isEmailAddress } = require('../helpers/is_email');
-const  {emailConfirmacion} = require('../utils/sendEmail');
+const  {emailConfirmacion} = require('../utils/sendEmail')
+const {DoublyLinkedList} = require('../helpers/generar_intercambio');
 const {login} = require("./auth");
+const { giftlist } = require('simple-gift-exchange')
 
 
 /* Cuando invitas a un participante */
@@ -488,31 +490,26 @@ const forceStartExchange = async (req, res) => {
     });
     if(participants.length < 2) return res.status(400).json({ error: "Para forzar el inicio del intercambio se necesitan al menos 2 participantes confirmados."});
 
-    let reciben = {};
-    let yaRecibieron = [];
-    for (let i = 0; i < participants.length; i++) {
-      let rand;
-      let j = 0;
-      do {
-        rand = Math.floor(Math.random() * ((participants.length-1) - (0) + 1) + (0));
-        if(rand === i) rand++;
-        if(rand >= participants.length) rand = rand-2;
-        if(j === 100) break;
-        j++;
-      } while (yaRecibieron.includes(participants[rand].id_user));
-
-      await Participant.update({
-        userToGift: participants[rand].id_user
-      }, {
-        where: {
-          id_user: participants[i].id_user
-        }
-      });
-      //console.log(i, rand);
-      reciben[`${participants[i].id_user}`] = { 'dioRegaloA': participants[rand].id_user}
-      yaRecibieron.push(participants[rand].id_user);
-      console.log(reciben);
+    const exchange = giftlist(participants)
+    console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+    console.log(exchange);
+    
+    for (let i=0 ; i<exchange.length ; i++){
+      for ( j=0; j<exchange[i].length; j++ ){
+        console.log(`${exchange[i][j]} gives a gift to  ${exchange[i][j+1]}`);
+        await Participant.update({
+          userToGift: exchange[i][j].email
+        }, {
+          where: {
+            id_user: exchange[i][j+1].email
+          }
+        });
+      }
     }
+
+
+
+
     //console.log(yaRecibieron);
 
 
