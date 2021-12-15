@@ -86,36 +86,7 @@ class Exchanges {
 
 
         }
-        
-
-
-        /* 
-        
-                    <div class="col-5 col-lg-3 col-sm-8 my-4">
-                <div class="card bg-card-1">
-                    <div class="card-body">
-                    <div class="title-center">
-
-					<img src="/frontend/img/crab-logo.png" alt="p1"/>
-					<h1 class="card-title">Robeto Cortes</h1>
-					<h5 class="title-text" >Mexico</h5>
-					<h5 class="title-text" >Estudiante</h5>
-					<h5 class="title-text">ESCOM</h5>
-					<div class="center-button mt-3">
-                        <button class="button button-green p-2">
-                          Añadir amigo
-                        </button>
-                    </div>
-                    </div>
-                    </div>
-                </div>
-            </div>
-        
-        */
-
-
     }
-
 
 }
 

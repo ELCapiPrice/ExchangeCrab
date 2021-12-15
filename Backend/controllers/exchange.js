@@ -9,6 +9,7 @@ const { User } = require('../models/User');
 const { Friendship } = require('../models/Friendship');
 const { isEmailAddress } = require('../helpers/is_email');
 const  {emailConfirmacion} = require('../utils/sendEmail')
+const {DoublyLinkedList} = require('../helpers/generar_intercambio');
 
 
 const createNewExchange = async (req, res) => {
@@ -398,7 +399,14 @@ const forceStartExchange = async (req, res) => {
 
     let reciben = {};
     let yaRecibieron = [];
+    let list = new DoublyLinkedList;
+    let list_test= new DoublyLinkedList
+
     for (let i = 0; i < participants.length; i++) {
+      list.push(participants[i])
+      list_test.push(participants[i])
+
+      /*
       let rand;
       let j = 0;
       do {
@@ -420,6 +428,7 @@ const forceStartExchange = async (req, res) => {
       reciben[`${participants[i].id_user}`] = { 'dioRegaloA': participants[rand].id_user}
       yaRecibieron.push(participants[rand].id_user);
       console.log(reciben);
+      */
     }
     //console.log(yaRecibieron);
 
