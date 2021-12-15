@@ -44,8 +44,9 @@ const inviteParticipant = async (req, res) => {
   *  abrimos el archivo join.html con live server y le agregamos los parametros por la url manualmente sacados del correo que le llego al usuario */
 
   // Ya te deje las variables KEY y EMAIL para que lo envies
+  //Aqui va la funcion para que envie email
 
-
+  res.status(200).json({msg: "Se invito correctamente al participante."});
 }
 
 
@@ -134,19 +135,6 @@ const getTopicsByExchangeId = async (req, res) => {
   return res.status(200).json(topics);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 const createNewExchange = async (req, res) => {
   let { key, topics, maxValue, limitDate, date, owner, ownerParticipate, comments } = req.body;
   /*console.log(key);
@@ -161,7 +149,9 @@ const createNewExchange = async (req, res) => {
   //Obtenemos una lista de los temas
   topics = topics.replaceAll(' ', '').split(',');
   let user = await User.findOne({ where: {id_user: owner} });
-  let  email=user.dataValues.email;
+  let  email = user.dataValues.email;
+  let firstName = user.dataValues.firstname;
+  let lastName = user.dataValues.lastname;
 
   try {
     /* TODO Verificar que la clave de intercambio no exista */
@@ -183,15 +173,17 @@ const createNewExchange = async (req, res) => {
         topic: topics[i],
         id_exchange: idExchange
       });
-      if(i === 3) break;
+      if(i === 3) break; //Si agrego mas de 3 pues no los agregamos
     }
 
     /* Si el dueño tambien participa entonces lo agregamos */
-    if(ownerParticipate){
+    if(ownerParticipate) {
       const participant = await Participant.create({
         topic: topics[0], //Le asignamos el primer tema por default. Luego lo puede cambiar
         id_exchange: idExchange, //ID del intercambio
-        id_user: owner, //ID del usuario
+        email: email, //email del usuario
+        fistname: firstName,
+        lastname: lastName,
         status: 1 //Estado aceptado
       });
     }
@@ -202,6 +194,7 @@ const createNewExchange = async (req, res) => {
   await emailConfirmacion (email , key)
   return res.status(200).json({ msg: "Se creo el intercambio correctamente"});
 }
+
 
 const getExchangeByKey = async (req, res) => {
   const key = req.params.key;
@@ -251,9 +244,16 @@ const getExchangesByUserId = async (req, res) => {
       }
     });
 
+    const user = await User.findOne({
+      where: {
+        id_user: id
+      }
+    });
+
+
     const participants = await Participant.findAll({
       where: {
-        id_user: id,
+        email: user.email,
         active: true
       }
     });
