@@ -13,7 +13,8 @@ const { getExchangeByKey,
   deleteUserFromExchange,
   editExchangeById,
   forceStartExchange,
-  list_exchanges } = require('../controllers/exchange');
+  list_exchanges,
+  getTopicsByExchangeId } = require('../controllers/exchange');
 
 
 router.get('/exchange/key/:key', getExchangeByKey);
@@ -26,6 +27,8 @@ router.post('/exchange/invite', inviteParticipantByEmail);
 router.post('/exchange/status', changeStatusOfParticipation);
 
 router.post('/exchange/join', joinExchangeByKey);
+
+router.get('/exchange/getTopics', getTopicsByExchangeId);
 
 router.delete('/exchange/delete', deleteExchangeById);
 

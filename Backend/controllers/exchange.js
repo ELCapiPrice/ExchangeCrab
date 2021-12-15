@@ -10,6 +10,139 @@ const { Friendship } = require('../models/Friendship');
 const { isEmailAddress } = require('../helpers/is_email');
 const  {emailConfirmacion} = require('../utils/sendEmail')
 const {DoublyLinkedList} = require('../helpers/generar_intercambio');
+const {login} = require("./auth");
+const { giftlist } = require('simple-gift-exchange')
+
+
+/* Cuando invitas a un participante */
+const inviteParticipant = async (req, res) => {
+  let { idExchange, email  } = req.body;
+
+  /* Buscamos la informacion del intercambio */
+  let exchange = await Exchange.findOne({
+    where: {
+      id_exchange: idExchange
+    }
+  });
+  if(!exchange) return res.status(400).json({error: "No existe el intercambio con la ID especificada: "})
+
+  /* Agregamos el participante a la tabla de participantes */
+  await Participant.create({
+    id_exchange: idExchange,
+    email: email
+  }).catch(err => {
+    console.log(err)
+    return res.status(500).json({error: "Ocurrio un error al invitar al participante: " + err.message})
+  });
+
+  let key = exchange.key;
+
+  /* TODO Le enviamos un correo electronico al invitado con el link con el siguiente formato */
+  /* http://localhost/join.html?key=key&email=email */
+  /* OJO. Obviamente el link no va a servir por que actualmente nosotros estamos corriendo el front con live server
+  *  lo que provoca que a localhost le asigne un puerto random (en mi caso con webstorm) asi que para la demostración
+  *  abrimos el archivo join.html con live server y le agregamos los parametros por la url manualmente sacados del correo que le llego al usuario */
+
+  // Ya te deje las variables KEY y EMAIL para que lo envies
+
+
+}
+
+
+/* Unirse por la clave del intercambio */
+const joinExchangeByKey = async (req, res) => {
+  const { key, topic, email, firstName, lastName /* idUser, */ } = req.body;
+
+  /*let user = await User.findOne({ where: {id_user: idUser} });
+  let  email=user.dataValues.email;*/
+
+  try {
+    /* Obtenemos el intercambio al que se quiere meter */
+    const exchange = await Exchange.findOne({
+      where: {
+        key,
+        active: true
+      }
+    });
+    /* Si no encontro el intercambio por su key, entonces no existe el intercambio */
+    if(!exchange) return res.status(400).json({error: "Error, el código de intercambio no existe!"});
+
+    /* Obtenemos la información si ya esta participando */
+    const participant = await Participant.findOne({
+      where: {
+        id_exchange: exchange.id_exchange,
+        email: email,
+        active: true
+      }
+    });
+    /* Si encontro al participante en ese intercambio quiere decir que: Ya esta participando, Fue invitado y no ha aceptado la invitación, o rechazo la invitación pero quiere unirse */
+    switch (participant) {
+      case 0: //Esta en estado pendiente. Osea que ya fue invitado pero nunca acepto por el correo
+        /* Actualizar el estado, topic, nombre y apellido del registro */
+        Participant.update({
+          topic: topic,
+          firstname: firstName,
+          lastname: lastName,
+          status: 1
+        }, {
+          where: {
+            id_exchange: exchange.id_exchange,
+            email: email,
+            active: true
+          }
+        });
+        return res.status(200).json({msg: "Te has unido exitosamente al intercambio que ya te habian invitado!"});
+      case 1: //Ya se encuentra en el intercambio
+        return res.status(400).json({error: "Error, ya estas registrado en ese intercambio!"});
+      case 2: //Esta en estado rechazada. Osea que fue invitado y rechazo la solicitud
+        return res.status(400).json({error: "Error, rechazaste la solicitud para unirte a este intercambio!"});
+      default:
+        break;
+    }
+    /* Si no encontro al participante entonces vamos a hacer un nuevo registro */
+    await Participant.create({
+      topic,
+      id_exchange: exchange.id_exchange,
+      email: email,
+      firstname: firstName,
+      lastname: lastName,
+      status: 1
+    });
+
+    await emailConfirmacion (email , key)
+
+    return res.status(200).json({ msg: "Te has unido exitosamente al intercambio."});
+  } catch (e) {
+    console.log(e);
+    return res.status(400).json({error: "Error al unirse al intercambio"});
+  }
+}
+
+/* GET */
+const getTopicsByExchangeId = async (req, res) => {
+  /* Ejemplo para consultar los topics */
+  /* localhost:7777/api/exchange/getTopics?exchangeId=3 */
+  const { exchangeId } = req.params;
+
+  return Topic.findAll({
+    where: {
+      id_exchange: exchangeId,
+      active: true
+    }
+  }).catch( err => res.status(500).json({error: "Error al obtener los intercambios por su id: " + err.message }));
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 const createNewExchange = async (req, res) => {
@@ -70,8 +203,6 @@ const createNewExchange = async (req, res) => {
 
 const getExchangeByKey = async (req, res) => {
   const key = req.params.key;
-
-
   try {
     const exchange = await Exchange.findOne({
       where: {
@@ -262,46 +393,6 @@ const deleteExchangeById = async (req, res) => {
   }
 }
 
-const joinExchangeByKey = async (req, res) => {
-  const { key, topic, idUser } = req.body;
-
-  let user = await User.findOne({ where: {id_user: idUser} });
-  let  email=user.dataValues.email;
-
-  try {
-    /* Obtenemos la informacion del intercambio */
-    const exchange = await Exchange.findOne({
-      where: {
-        key,
-        active: true
-      }
-    });
-    if(!exchange) return res.status(400).json({error: "Error, el código de intercambio no existe!"});
-
-    const participants = await Participant.findOne({
-      where: {
-        id_user: idUser,
-        status: true
-      }
-    });
-    if(participants) return res.status(400).json({error: "Error, ya estas registrado en ese intercambio!"});
-
-    /* Unimos al usuario al intercambio */
-    const participant = await Participant.create({
-      topic,
-      id_exchange: exchange.id_exchange,
-      id_user: idUser,
-      status: 1
-    });
-
-  await emailConfirmacion (email , key)
-
-    return res.status(200).json({ msg: "Te has unido exitosamente al intercambio."});
-  } catch (e) {
-    console.log(e);
-    return res.status(400).json({error: "Error al unirse al intercambio"});
-  }
-}
 
 const changeStatusOfParticipation = async (req, res) => {
   const { idExchange, accept, idUser } = req.body;
@@ -397,39 +488,26 @@ const forceStartExchange = async (req, res) => {
     });
     if(participants.length < 2) return res.status(400).json({ error: "Para forzar el inicio del intercambio se necesitan al menos 2 participantes confirmados."});
 
-    let reciben = {};
-    let yaRecibieron = [];
-    let list = new DoublyLinkedList;
-    let list_test= new DoublyLinkedList
-
-    for (let i = 0; i < participants.length; i++) {
-      list.push(participants[i])
-      list_test.push(participants[i])
-
-      /*
-      let rand;
-      let j = 0;
-      do {
-        rand = Math.floor(Math.random() * ((participants.length-1) - (0) + 1) + (0));
-        if(rand === i) rand++;
-        if(rand >= participants.length) rand = rand-2;
-        if(j === 100) break;
-        j++;
-      } while (yaRecibieron.includes(participants[rand].id_user));
-
-      await Participant.update({
-        userToGift: participants[rand].id_user
-      }, {
-        where: {
-          id_user: participants[i].id_user
-        }
-      });
-      //console.log(i, rand);
-      reciben[`${participants[i].id_user}`] = { 'dioRegaloA': participants[rand].id_user}
-      yaRecibieron.push(participants[rand].id_user);
-      console.log(reciben);
-      */
+    const exchange = giftlist(participants)
+    console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+    console.log(exchange);
+    
+    for (let i=0 ; i<exchange.length ; i++){
+      for ( j=0; j<exchange[i].length; j++ ){
+        console.log(`${exchange[i][j]} gives a gift to  ${exchange[i][j+1]}`);
+        await Participant.update({
+          userToGift: exchange[i][j].email
+        }, {
+          where: {
+            id_user: exchange[i][j+1].email
+          }
+        });
+      }
     }
+
+
+
+
     //console.log(yaRecibieron);
 
 
@@ -448,7 +526,7 @@ const  list_exchanges= async(req , res) =>{
 
   if (exchanges){
   return  res.status(200).json(exchanges)
-  } 
+  }
 
   return res.status(401).json("UPPS Problemas la procesar la peticion")
 
@@ -473,5 +551,6 @@ module.exports = {
   deleteUserFromExchange,
   editExchangeById,
   forceStartExchange,
-  list_exchanges
+  list_exchanges,
+  getTopicsByExchangeId
 }
