@@ -124,12 +124,14 @@ const getTopicsByExchangeId = async (req, res) => {
   /* localhost:7777/api/exchange/getTopics?exchangeId=3 */
   const { exchangeId } = req.params;
 
-  return Topic.findAll({
+  const topics = await Topic.findAll({
     where: {
       id_exchange: exchangeId,
       active: true
     }
   }).catch( err => res.status(500).json({error: "Error al obtener los intercambios por su id: " + err.message }));
+
+  return res.status(200).json(topics);
 }
 
 
