@@ -8,7 +8,110 @@ const { Participant } = require('../models/Participant');
 const { User } = require('../models/User');
 const { Friendship } = require('../models/Friendship');
 const { isEmailAddress } = require('../helpers/is_email');
-const  {emailConfirmacion} = require('../utils/sendEmail')
+const  {emailConfirmacion} = require('../utils/sendEmail');
+
+
+/* Cuando invitas a un participante */
+const inviteParticipant = async (req, res) => {
+  let { idExchange, email  } = req.body;
+
+  /* Agregamos el participante a la tabla de participantes */
+  let participant = await Participant.create({
+    id_exchange: idExchange,
+    email: email
+  }).catch(err => {
+    console.log(err)
+  });
+
+}
+
+/* Cuando un participante acepta o rechaza una invitación */
+const changeStatusParticipant = async (req, res) => {
+
+}
+
+
+/* Unirse por la clave del intercambio */
+const joinExchangeByKey = async (req, res) => {
+  const { key, topic, email, firstName, lastName /* idUser, */ } = req.body;
+
+  /*let user = await User.findOne({ where: {id_user: idUser} });
+  let  email=user.dataValues.email;*/
+
+  try {
+    /* Obtenemos el intercambio al que se quiere meter */
+    const exchange = await Exchange.findOne({
+      where: {
+        key,
+        active: true
+      }
+    });
+    /* Si no encontro el intercambio por su key, entonces no existe el intercambio */
+    if(!exchange) return res.status(400).json({error: "Error, el código de intercambio no existe!"});
+
+    /* Obtenemos la información si ya esta participando */
+    const participant = await Participant.findOne({
+      where: {
+        id_exchange: exchange.id_exchange,
+        email: email,
+        active: true
+      }
+    });
+    /* Si encontro al participante en ese intercambio quiere decir que: Ya esta participando, Fue invitado y no ha aceptado la invitación, o rechazo la invitación pero quiere unirse */
+    switch (participant) {
+      case 0: //Esta en estado pendiente. Osea que ya fue invitado pero nunca acepto por el correo
+        /* Actualizar el estado, topic, nombre y apellido del registro */
+        Participant.update({
+          topic: topic,
+          firstname: firstName,
+          lastname: lastName,
+          status: 1
+        }, {
+          where: {
+            id_exchange: exchange.id_exchange,
+            email: email,
+            active: true
+          }
+        });
+        return res.status(200).json({msg: "Te has unido exitosamente al intercambio que ya te habian invitado!"});
+      case 1: //Ya se encuentra en el intercambio
+        return res.status(400).json({error: "Error, ya estas registrado en ese intercambio!"});
+      case 2: //Esta en estado rechazada. Osea que fue invitado y rechazo la solicitud
+        return res.status(400).json({error: "Error, rechazaste la solicitud para unirte a este intercambio!"});
+      default:
+        break;
+    }
+    /* Si no encontro al participante entonces vamos a hacer un nuevo registro */
+    await Participant.create({
+      topic,
+      id_exchange: exchange.id_exchange,
+      email: email,
+      firstname: firstName,
+      lastname: lastName,
+      status: 1
+    });
+
+    await emailConfirmacion (email , key)
+
+    return res.status(200).json({ msg: "Te has unido exitosamente al intercambio."});
+  } catch (e) {
+    console.log(e);
+    return res.status(400).json({error: "Error al unirse al intercambio"});
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 const createNewExchange = async (req, res) => {
@@ -261,46 +364,6 @@ const deleteExchangeById = async (req, res) => {
   }
 }
 
-const joinExchangeByKey = async (req, res) => {
-  const { key, topic, idUser } = req.body;
-
-  let user = await User.findOne({ where: {id_user: idUser} });
-  let  email=user.dataValues.email;
-
-  try {
-    /* Obtenemos la informacion del intercambio */
-    const exchange = await Exchange.findOne({
-      where: {
-        key,
-        active: true
-      }
-    });
-    if(!exchange) return res.status(400).json({error: "Error, el código de intercambio no existe!"});
-
-    const participants = await Participant.findOne({
-      where: {
-        id_user: idUser,
-        status: true
-      }
-    });
-    if(participants) return res.status(400).json({error: "Error, ya estas registrado en ese intercambio!"});
-
-    /* Unimos al usuario al intercambio */
-    const participant = await Participant.create({
-      topic,
-      id_exchange: exchange.id_exchange,
-      id_user: idUser,
-      status: 1
-    });
-
-  await emailConfirmacion (email , key)
-
-    return res.status(200).json({ msg: "Te has unido exitosamente al intercambio."});
-  } catch (e) {
-    console.log(e);
-    return res.status(400).json({error: "Error al unirse al intercambio"});
-  }
-}
 
 const changeStatusOfParticipation = async (req, res) => {
   const { idExchange, accept, idUser } = req.body;

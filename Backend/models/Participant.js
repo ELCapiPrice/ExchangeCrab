@@ -25,7 +25,7 @@ const Participant = sequelize.define("participant", {
   },
   email: { //Correo del participante
     type: Sequelize.STRING,
-    allowNull: true,
+    allowNull: false,
   },
   firstname: { //Correo del participante
     type: Sequelize.STRING,
