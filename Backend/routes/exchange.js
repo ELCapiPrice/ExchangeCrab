@@ -13,7 +13,7 @@ const { getExchangeByKey,
   deleteUserFromExchange,
   editExchangeById,
   forceStartExchange,
-  addFriend } = require('../controllers/exchange');
+  list_exchanges } = require('../controllers/exchange');
 
 
 router.get('/exchange/key/:key', getExchangeByKey);
@@ -43,7 +43,8 @@ router.post('/exchange',
   validarCampos,
   createNewExchange);
 
-router.post("/add-friend/:email" , addFriend);
+router.get("/list-exchanges" , list_exchanges);
+
 
 
 module.exports = router;
