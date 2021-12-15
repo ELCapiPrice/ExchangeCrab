@@ -15,13 +15,33 @@ const  {emailConfirmacion} = require('../utils/sendEmail');
 const inviteParticipant = async (req, res) => {
   let { idExchange, email  } = req.body;
 
+  /* Buscamos la informacion del intercambio */
+  let exchange = await Exchange.findOne({
+    where: {
+      id_exchange: idExchange
+    }
+  });
+  if(!exchange) return res.status(400).json({error: "No existe el intercambio con la ID especificada: "})
+
   /* Agregamos el participante a la tabla de participantes */
-  let participant = await Participant.create({
+  await Participant.create({
     id_exchange: idExchange,
     email: email
   }).catch(err => {
     console.log(err)
+    return res.status(500).json({error: "Ocurrio un error al invitar al participante: " + err.message})
   });
+
+  let key = exchange.key;
+
+  /* TODO Le enviamos un correo electronico al invitado con el link con el siguiente formato */
+  /* http://localhost/join.html?key=key&email=email */
+  /* OJO. Obviamente el link no va a servir por que actualmente nosotros estamos corriendo el front con live server
+  *  lo que provoca que a localhost le asigne un puerto random (en mi caso con webstorm) asi que para la demostración
+  *  abrimos el archivo join.html con live server y le agregamos los parametros por la url manualmente sacados del correo que le llego al usuario */
+
+  // Ya te deje las variables KEY y EMAIL para que lo envies
+
 
 }
 
@@ -502,7 +522,7 @@ const  list_exchanges= async(req , res) =>{
 
   if (exchanges){
   return  res.status(200).json(exchanges)
-  } 
+  }
 
   return res.status(401).json("UPPS Problemas la procesar la peticion")
 
