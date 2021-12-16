@@ -18,7 +18,7 @@ router.post('/login', [
 
 router.get('/get-users', get_users );
 router.post('/create-user' , create_user);
-router.get('/user/:id' , data_user);
+router.get('/user/:email' , data_user);
 
 
 
