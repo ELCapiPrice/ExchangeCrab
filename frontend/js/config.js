@@ -26,6 +26,7 @@ function parseJWT(token) {
 }
 
 let owner = 2;
+let email = "";
 /* Obtenemos el archivo en el que se encuenta */
 let ruta = location.href.split('/');
 ruta = ruta[ruta.length - 1];
@@ -50,6 +51,7 @@ if(!token) { //Si existen esos datos
 
   const userInfo = parseJWT(token); //Obtenemos su informacion de el
   console.log(userInfo);
+  email = userInfo.pk;
   owner = userInfo.pk; //Y guardamos su id del usuario en la variable owner para saber quien es.
 }
 
@@ -57,3 +59,32 @@ if(!token) { //Si existen esos datos
 function cerrarSesion() {
   document.cookie = `token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
 }
+
+
+
+class APIService {
+  async getData(uri, method = 'get', headers = {}, body = {}) {
+    let data;
+    try {
+      switch (method.toLowerCase()) {
+        case 'get':
+          data = await fetch(`${baseURL}${uri}`, { method: method, headers: headers });
+          break;
+        case 'post':
+        case 'put':
+        case 'delete':
+          data = await fetch(`${baseURL}${uri}`, { method: method, headers: headers, body: JSON.stringify(body) });
+          break;
+        default:
+          data = await fetch(`${baseURL}${uri}`, { method: method, headers: headers });
+          break;
+      }
+      return data.json();
+    } catch (e) {
+      console.error(`Error al hacer fetch a ${baseURL}${uri} \nERROR: ${e.message}`);
+    }
+  }
+}
+
+/* Clase de nuestro servicio de nuestra api de intercambios */
+const service = new APIService();

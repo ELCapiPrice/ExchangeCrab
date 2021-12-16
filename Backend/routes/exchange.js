@@ -22,13 +22,13 @@ router.get('/exchange/user/:id', getExchangesByUserId);
 
 router.get('/exchange/force/:idExchange', forceStartExchange);
 
+router.get('/exchange/getTopics', getTopicsByExchangeId);
+
 router.post('/exchange/invite', inviteParticipantByEmail);
 
 router.post('/exchange/status', changeStatusOfParticipation);
 
 router.post('/exchange/join', joinExchangeByKey);
-
-router.get('/exchange/getTopics', getTopicsByExchangeId);
 
 router.delete('/exchange/delete', deleteExchangeById);
 

@@ -76,7 +76,7 @@ export const navbar = `
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-            <button type="submit" class="btn btn-success">Crear</button>
+            <button type="submit" class="btn btn-success" id="botonCrearIntercambio">Crear</button>
           </div>
         </div>
       </form>

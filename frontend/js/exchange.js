@@ -1,5 +1,6 @@
 
-/* Crear intercambio */
+/* LISTO */
+/* Crear un intercambio */
 async function createExchange(event) {
   event.preventDefault(); //Evitamos que se envie el formulario.
   const key = document.getElementById('inputKey').value;
@@ -10,7 +11,7 @@ async function createExchange(event) {
   let comments = document.getElementById('inputComments').value;
   const ownerParticipate = document.getElementById('inputOwnerParticipate').checked;
 
-  if(!key || !topics || !maxValue || !limitDate || !date || !ownerParticipate || !owner) return alert('Error al leer los datos de los inputs');
+  if(!key || !topics || !maxValue || !limitDate || !date || !ownerParticipate || !owner) return alert('Error al leer los datos de los inputs (Falto llenar alguno).');
   if(!comments) comments = "";
   const info = {
     key,
@@ -22,23 +23,73 @@ async function createExchange(event) {
     ownerParticipate,
     owner
   };
-  try {
-    let data = await fetch(`${baseURL}/exchange`, {
-      method: 'post',
-      headers: {
-        "Accept": "*/*",
-        "Content-type": 'application/json',
-      },
-      body: JSON.stringify(info)
-    });
-    data = await data.json();
-    console.log(data);
-    alert(`${data.msg}`);
-    location.reload();
-  } catch (e) {
-    console.log(e);
+  const headers = {
+    "Accept": "*/*",
+    "Content-type": 'application/json',
   }
+  document.getElementById('botonCrearIntercambio').disabled = true;
+  const data = await service.getData('/exchange', 'post', headers, info).catch(err => console.error("Error al crear el intercambio: " + err));
+  console.log(data);
+  alert(`${data.msg}`);
+  location.reload();
 }
+
+/* LISTO */
+/* Unirse a un intercambio */
+/* Esta funcion es solo si el usuario esta logeado. Si no se usa la función joinExchangeUnRegister() */
+async function joinExchange(event) {
+  event.preventDefault(); //Detenemos el envio del formulario
+  const key = document.getElementById('codeExchange').value;
+  const topic = document.getElementById('selectTopic').value;
+  if(!key) alert("Escribe el código del intercambio!");
+  if(!topic) alert("Selecciona un tema para participar");
+
+  const info = {
+    key,
+    topic,
+    idUser: owner
+  }
+
+  const headers = {
+    "Accept": "*/*",
+    "Content-type": 'application/json',
+  }
+
+  const data = await service.getData('/exchange/join', 'post', headers, info).catch(err => console.error("Error al unirse al intercambio. " + err));
+  console.log(data);
+  if(data.error) {
+    alert(data.error);
+    return location.reload();
+  }
+  alert("Te has unido correctamente");
+  location.reload();
+}
+
+/* LISTO */
+/* Salir de un intercambio por su ID */
+/* Función solo para usuarios registrados */
+async function leaveExchangeById(idExchange) {
+  const info = {
+    idUser: owner,
+    idExchange: idExchange
+  }
+  const headers = {
+    "Accept": "*/*",
+    "Content-type": 'application/json',
+  }
+
+  const data = await service.getData('/exchange/user/delete', 'delete', headers, info).catch( err => console.error(err));
+
+  console.log(data);
+  if(data.error) {
+    alert(data.error);
+    return location.reload();
+  }
+  alert(data.msg);
+  location.reload();
+}
+
+
 
 window.onload = function () {
   getExchangesOfUser();
@@ -54,11 +105,10 @@ window.onload = function () {
     const id = jsonjwt.pk
     console.log(email);
     addFriend(email , input_add_friend.value, id)
-
   })
 
 }
-
+/* LISTO */
 /* Obtener la información de los intercambios del usuario */
 async function getExchangesOfUser() {
   try {
@@ -70,10 +120,12 @@ async function getExchangesOfUser() {
       }
     });
     data = await data.json();
+    console.log("data");
     console.log(data);
 
     /* Cargamos los intercambios en los que participas */
     for(let i = 0; i < data.exchangesParticipate.length; i++) {
+      //if(data.exchangesParticipate[i].)
       const cardHTML = `
             <div class="col-12 my-1">
               <div class="row rectangle-text">
@@ -139,10 +191,10 @@ async function getExchangesOfUser() {
                     <div class="col-3" style="font-size:0;">
                       <div class="row justify-content-center">
                         <div class="col-auto">
-                          <button href="#" class="button button-info"><i class="fas fa-check-circle icon-medium info"></i></button>
+                          <button href="#" class="button button-info" onclick="getTopicFromExchange('${data.exchangeInvitations[i].key}')" data-bs-toggle="modal" data-bs-target="#joinExchange"><i class="fas fa-check-circle icon-medium info"></i></button>
                         </div>
                         <div class="col-auto">
-                          <button href="#" class="button button-info"><i class="fas fa-times-circle icon-medium leave"></i></button>
+                          <button href="#" class="button button-info" onclick="rejectInvitation()"><i class="fas fa-times-circle icon-medium leave"></i></button>
                         </div>
                       </div>
                     </div>
@@ -161,75 +213,52 @@ async function getExchangesOfUser() {
   }
 }
 
-async function getTopicFromExchange() {
-  const key = document.getElementById('codeExchange').value;
-  if(!key) {
-    alert("Escribe el código del intercambio!");
-    return location.reload();
-  }
-  if(key.startsWith('#') || key.startsWith('?')) {
-    alert("Escribe el código sin el #");
-    return location.reload();
-  }
 
-  try {
-    let data = await fetch(`${baseURL}/exchange/key/${key}`, {
-      method: 'get',
-      headers: {
-        "Accept": "*/*",
-        "Content-type": 'application/json',
-      }
-    });
-    data = await data.json();
-    console.log(data);
-    if(data.error) {
-      alert(data.error);
+async function rejectInvitation() {
+
+}
+
+
+/* LISTO */
+async function getTopicFromExchange(key) {
+  const headers = {
+    "Accept": "*/*",
+    "Content-type": 'application/json',
+  }
+  let data;
+  if(key) { //Si la llave se pasa por parametro
+    data = await service.getData(`/exchange/key/${key}`, 'get', headers).catch( err => console.error("Error al obtener la informacion del intercambio por su llave: " + err));
+  } else { //Sacamos la llave del campo de texto
+    key = document.getElementById('codeExchange').value;
+    if(!key) { //verificamos que el campo no este vacio
+      alert("Escribe el código del intercambio!");
       return location.reload();
     }
-    const selectTopic = document.getElementById('selectTopic');
-    for (let i = 0; i < data.topics.length; i++) {
-      const option = document.createElement('option');
-      option.value = data.topics[i].topic;
-      option.text = data.topics[i].topic;
-      selectTopic.appendChild(option);
+    if(key.startsWith('#') || key.startsWith('?')) {
+      alert("Escribe el código sin el #");
+      return location.reload();
     }
-    const valueProduct = document.getElementById('valueProduct').innerText = data.exchange.maxValue;
-
-  } catch (e) {
-    console.log(e);
+    data = await service.getData(`/exchange/key/${key}`, 'get', headers).catch( err => console.error("Error al obtener la informacion del intercambio por su llave: " + err));
   }
+  console.log(data);
+  if(data.error) {
+    alert(data.error);
+    return location.reload();
+  }
+
+  const selectTopic = document.getElementById('selectTopic');
+  selectTopic.innerHTML = "";
+  for (let i = 0; i < data.topics.length; i++) {
+    const option = document.createElement('option');
+    option.value = data.topics[i].topic;
+    option.text = data.topics[i].topic;
+    selectTopic.appendChild(option);
+  }
+  const valueProduct = document.getElementById('valueProduct').innerText = data.exchange.maxValue;
+
 }
 
-async function joinExchange(event) {
-  event.preventDefault();
-  const key = document.getElementById('codeExchange').value;
-  const topic = document.getElementById('selectTopic').value;
-  console.log(topic);
-  if(!key) alert("Escribe el código del intercambio!");
-
-  const info = {
-    key,
-    topic,
-    idUser: owner
-  }
-
-  try {
-    let data = await fetch(`${baseURL}/exchange/join`, {
-      method: 'post',
-      headers: {
-        "Accept": "*/*",
-        "Content-type": 'application/json',
-      },
-      body: JSON.stringify(info)
-    });
-    data = await data.json();
-    console.log(data);
-   location.reload();
-  } catch (e) {
-    console.log(e);
-  }
-}
-
+/* LISTO */
 async function editExchangeById(data) {
   const smite =
     {
@@ -246,7 +275,7 @@ async function editExchangeById(data) {
   document.getElementById('editComments').value = smite.comments;
 }
 
-
+/* LISTO */
 async function editExchange(event){
   event.preventDefault();
 
@@ -281,6 +310,7 @@ async function editExchange(event){
   }
 }
 
+/* LISTO */
 async function deleteExchangeById(idExchange) {
   console.log("Borrando");
 

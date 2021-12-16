@@ -147,13 +147,14 @@ const get_users = async (req, res)=>{
     }
 }
 
-const data_user = async (req , res)=>{
+const data_user = async (req , res) => {
 
-    const {id} = req.params;
-    const user = await User.findOne({where: {id_user: id}});
+    const {email} = req.params;
+    console.log(email);
+    const user = await User.findOne({where: {email: email, is_active: true}});
     if (user === null) {
         res.status(400).json('Usuario no encontrado');
-    }else{
+    } else{
         let  iduser= user.dataValues.id_user;
         let  idunique=user.dataValues.id_unique;
         let  username= user.dataValues.username;
