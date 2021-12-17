@@ -9,6 +9,7 @@ const { User } = require('../models/User');
 const { Friendship } = require('../models/Friendship');
 const { isEmailAddress } = require('../helpers/is_email');
 const  {emailConfirmacion} = require('../utils/sendEmail')
+const {emailGift} = require ('../utils/EmailToUser')
 const {DoublyLinkedList} = require('../helpers/generar_intercambio');
 const {login} = require("./auth");
 const { giftlist } = require('simple-gift-exchange');
@@ -565,6 +566,8 @@ const forceStartExchange = async (req, res) => {
           }
         });
       }
+
+      await emailGift(exchange[i][0],exchange[i][1])
     }
 
 
