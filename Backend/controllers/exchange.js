@@ -209,16 +209,23 @@ const inviteParticipantByEmail = async (req, res) => {
 const getTopicsByExchangeId = async (req, res) => {
   /* Ejemplo para consultar los topics */
   /* localhost:7777/api/exchange/getTopics?exchangeId=3 */
-  const { exchangeId } = req.params;
+  
+  const { exchangeId } = req.query;
+  console.log(exchangeId);
 
-  const topics = await Topic.findAll({
-    where: {
-      id_exchange: exchangeId,
-      active: true
-    }
-  }).catch( err => res.status(500).json({error: "Error al obtener los intercambios por su id: " + err.message }));
+  try {
+    const topics = await Topic.findAll({
+      where: {
+        id_exchange: exchangeId,
+        active: true
+      }
+    })
+    return res.status(200).json(topics);
+    
+  } catch (error) {
+    return res.json({"ERROORR": 500}) 
+  }
 
-  return res.status(200).json(topics);
 }
 
 /* LISTO */

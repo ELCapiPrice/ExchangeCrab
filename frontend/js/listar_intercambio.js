@@ -27,7 +27,7 @@ class Exchanges {
         console.log(data.length);
         for (let  i =0 ; i<data.length ; i++){
             
-            let {comments , id_exchange , maxValue , limitDate}= data[i];
+            let {comments , id_exchange , maxValue , limitDate , key}= data[i];
             console.log(data[i]);
 
             let  child_div = document.createElement('div');
@@ -69,6 +69,9 @@ class Exchanges {
             let btn = document.createElement('button')
             btn.classList.add('button', 'button-green', 'p-2')
             btn.textContent="Unirse al intercambio"
+            btn.setAttribute("id", id_exchange)
+            btn.setAttribute("key" , key)
+            
 
 
             parent_div.appendChild(child_div)
@@ -86,7 +89,66 @@ class Exchanges {
 
 
         }
+
+        
     }
+
+    async registrar(id , key, payload){
+        console.log(id , key);
+        
+        try {
+            let data = await fetch(`http://localhost:7777/api/exchange/getTopics?exchangeId=${id}`, {
+                method: 'GET'
+            })
+            data = await data.json();
+            //data[0].topic
+            //let { key, topic, email, firstName, lastName, idUser } 
+    
+
+            let unirse =await fetch("http://localhost:7777/api/exchange/join", {
+                method: 'POST',
+                body: new URLSearchParams({
+                    'key': key,
+                    'topic': data[0].topic,
+                    'email': payload.email,
+                    'firstName': payload.firstName,
+                    'lastName': payload.lastname,
+                    'idUser': payload.pk,
+                })
+            })
+            .then(response => response.json())
+            .then((data => {
+                console.log(data);
+            if (data.error == 'Error, ya estas registrado en ese intercambio!'){
+                alert("Ya estas en el intercambio")
+            }else{
+                alert("Te uniste al intercambio :)")
+            }
+            }));
+        
+        
+        
+        
+        } catch (error) {
+            console.log("ERROR EN FECTH ", error);
+        }
+    }
+
+    getCookie() {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; token=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    parseJWT(token) {
+        let base64Url = token.split('.')[1];
+        let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        let jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        return JSON.parse(jsonPayload);
+    }
+
 
 }
 
@@ -95,7 +157,21 @@ window.onload = async function(){
 
 console.log("Holaa");
 const exchanges = new Exchanges("http://localhost:7777/api/list-exchanges");
-exchanges.generarCards()
+await exchanges.generarCards()
+
+const buttons = document.querySelectorAll(".button")
+console.log(buttons);
+for (let i = 0; i < buttons.length; i++) {
+    console.log("ss");
+    buttons[i].addEventListener("click" , ()=>{
+        const key = buttons[i].getAttribute('key');
+        const id = buttons[i].getAttribute('id');
+
+        const data =exchanges.parseJWT(exchanges.getCookie());
+        console.log(data);
+        exchanges.registrar(id, key, data)
+    })
+}
 
 
 
