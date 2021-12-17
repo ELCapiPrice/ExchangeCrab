@@ -17,6 +17,7 @@ async function getExhcnageById () {
   }
 
   const data = await service.getData(`/exchange/key/${key}`, 'get', headers).catch( err => console.error("Error al obtener los intercambios por su ID" + err));
+  console.log("DATA");
   console.log(data);
 
   /* Si es el dueño, activamos el boton forzar inicio del intercambio */

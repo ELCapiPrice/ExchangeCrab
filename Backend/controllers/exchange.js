@@ -543,13 +543,13 @@ const forceStartExchange = async (req, res) => {
     });
     if(participants.length < 2) return res.status(400).json({ error: "Para forzar el inicio del intercambio se necesitan al menos 2 participantes confirmados."});
     console.log(participants[0].dataValues.email);
-    
+
     //En suaurios se van a guardar los email de los participantes
     let usuarios =[]
     for (let i =  0 ; i<participants.length ; i++){
         usuarios.push(participants[i].dataValues.email)
     }
-  
+
     //genrera el intercmabio ejemplo [ ["chuz@yahoo.com" , "mike@yahoo.com"] , ["prax@gmail.com"] , ["pedro@gmail.co"]]
     const exchange = giftlist(usuarios)
     console.log(exchange);
@@ -557,11 +557,14 @@ const forceStartExchange = async (req, res) => {
     for (let i=0 ; i<exchange.length ; i++){
       for ( j=0; j<exchange[i].length-1; j++ ){
         console.log(`${exchange[i][j]} gives a gift to  ${exchange[i][j+1]}`);
+
+        console.log("TEST");
+        console.log(exchange[i][j].email);
         await Participant.update({
-          userToGift: exchange[i][j].email
+          userToGift: exchange[i][j+1] //exchange[i][j].email
         }, {
           where: {
-            email: exchange[i][j+1].email,
+            email: exchange[i][j],
             active: true
           }
         });
