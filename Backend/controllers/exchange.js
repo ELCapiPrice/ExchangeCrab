@@ -13,6 +13,7 @@ const {emailGift} = require ('../utils/EmailToUser')
 const {DoublyLinkedList} = require('../helpers/generar_intercambio');
 const {login} = require("./auth");
 const { giftlist } = require('simple-gift-exchange');
+const { use } = require('../routes/exchange');
 
 
 /* CREAR INTERCAMBIO LISTO */
@@ -553,13 +554,9 @@ const forceStartExchange = async (req, res) => {
 
     //En suaurios se van a guardar los email de los participantes
     let usuarios =[]
-    let nombres_usuario = []
-    let apellidos_usuarios=[]
     for (let i =  0 ; i<participants.length ; i++){
         usuarios.push(participants[i].dataValues.email)
-        nombres_usuario.push(participants[i].dataValues.firstname)        
-        apellidos_usuarios.push(participants[i].dataValues.apellidos_usuarios)        
-
+  
       }
 
     //genrera el intercmabio ejemplo [ ["chuz@yahoo.com" , "mike@yahoo.com"] , ["prax@gmail.com"] , ["pedro@gmail.co"]]
@@ -571,7 +568,7 @@ const forceStartExchange = async (req, res) => {
         console.log(`${exchange[i][j]} gives a gift to  ${exchange[i][j+1]}`);
 
         console.log("TEST");
-        console.log(exchange[i][j]);
+        console.log(exchange[i][0],exchange[i][0],);
         await Participant.update({
           userToGift: exchange[i][j+1] //exchange[i][j].email
         }, {
@@ -582,7 +579,14 @@ const forceStartExchange = async (req, res) => {
         });
       }
 
-      await emailGift(exchange[i][0],exchange[i][1], nombres_usuario[i][1] , apellidos_usuarios[i][1])
+      const user = await User.findOne({
+        where : {
+          email : exchange[i][1]
+        }
+      })
+      console.log(user.dataValues.firstname  )
+
+      await emailGift(exchange[i][0],exchange[i][1], user.dataValues.firstname  ,  user.dataValues.lastname)
     }
 
 

@@ -20,7 +20,7 @@ const nodemailer = require('nodemailer');
          let info = await transporter.sendMail({
              from: '"Exchange Crab" <chuz.regis@proyectocifrado.com>', // sender address
              to: email, // list of receivers
-             subject: "TU INTERCAMBIO ESTA LIESTO :)",
+             subject: "TU INTERCAMBIO ESTA LISTO :)",
              text: `La persona que te toca dar tu regalo es ${persona} `,
              html: `<h1>Felicidades todos estan emocionados en recibir su regalo</h1> 
                     <br>
