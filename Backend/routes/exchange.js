@@ -30,6 +30,7 @@ router.post('/exchange/status', changeStatusOfParticipation);
 
 router.post('/exchange/join', joinExchangeByKey);
 
+
 router.delete('/exchange/delete', deleteExchangeById);
 
 router.put('/exchange/edit', editExchangeById);
