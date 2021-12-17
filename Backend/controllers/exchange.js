@@ -553,9 +553,14 @@ const forceStartExchange = async (req, res) => {
 
     //En suaurios se van a guardar los email de los participantes
     let usuarios =[]
+    let nombres_usuario = []
+    let apellidos_usuarios=[]
     for (let i =  0 ; i<participants.length ; i++){
         usuarios.push(participants[i].dataValues.email)
-    }
+        nombres_usuario.push(participants[i].dataValues.firstname)        
+        apellidos_usuarios.push(participants[i].dataValues.apellidos_usuarios)        
+
+      }
 
     //genrera el intercmabio ejemplo [ ["chuz@yahoo.com" , "mike@yahoo.com"] , ["prax@gmail.com"] , ["pedro@gmail.co"]]
     const exchange = giftlist(usuarios)
@@ -566,7 +571,7 @@ const forceStartExchange = async (req, res) => {
         console.log(`${exchange[i][j]} gives a gift to  ${exchange[i][j+1]}`);
 
         console.log("TEST");
-        console.log(exchange[i][j].email);
+        console.log(exchange[i][j]);
         await Participant.update({
           userToGift: exchange[i][j+1] //exchange[i][j].email
         }, {
@@ -577,7 +582,7 @@ const forceStartExchange = async (req, res) => {
         });
       }
 
-      await emailGift(exchange[i][0],exchange[i][1])
+      await emailGift(exchange[i][0],exchange[i][1], nombres_usuario[i][1] , apellidos_usuarios[i][1])
     }
 
 

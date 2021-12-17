@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
 
- const emailGift = async(email , persona="Jane Doe") => {
+ const emailGift = async(email , persona="Jane Doe" , nombre="Jane" , apellido="Doe") => {
      try {
          console.log("Email: ", email);
          let testAccount = await nodemailer.createTestAccount();
@@ -24,7 +24,7 @@ const nodemailer = require('nodemailer');
              text: `La persona que te toca dar tu regalo es ${persona} `,
              html: `<h1>Felicidades todos estan emocionados en recibir su regalo</h1> 
                     <br>
-                    La persona que te toca dar tu regalo es ${persona}
+                    <h2>La persona que te toca dar tu regalo es ${persona} -->  ${nombre} ${apellido} </h2>
              `,
           
          });
